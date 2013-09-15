@@ -6,7 +6,7 @@ import re
 import difflib
 
 outputFile = open('assignment1.txt', 'w')
-correctFile = open('correct.txt', 'r')
+correct = open('correct.txt', 'r').read()
 filename = "Logo.py"
 dateString = "09-11-2013 23:00:00"
 outputFile.write('CSID\tGrade\tComments\n')
@@ -115,7 +115,7 @@ def assign1( csid ) :
       print('Their output:')
       print(out)
       print('Correct output:')
-      print(correctFile.read())
+      print(correct)
       print('logo has ' + str(len(lines)) +' lines, not 19')
       #don't dock points for lateness or wrong filename here
       gradeInput = input("Grade out of 70 (no style, hit enter if 65): ")

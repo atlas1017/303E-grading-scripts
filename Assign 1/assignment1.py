@@ -23,10 +23,11 @@ def main():
       if "." not in item :
         myList.append( item )
   for csid in myList :
+    count += 1
     os.system('clear')
-    print('==========')
-    print(csid)
-    print('==========')
+    print('======================')
+    print(csid + " " + str(count) + " out of " + str(len(myList)))
+    print('======================')
     assign1( csid )
   outputFile.close()
 
@@ -136,6 +137,8 @@ def assign1( csid ) :
     style = input("Style/Comments (out of 30, hit enter for 30): ")
     if not style.isdigit() :
       style = 30
+    else :
+      style = int(style)
     
     #writing grade time!
     if late == 3 :

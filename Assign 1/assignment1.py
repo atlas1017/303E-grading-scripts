@@ -6,7 +6,7 @@ import re
 import difflib
 
 outputFile = open('assignment1.txt', 'w')
-correctFile = open('correct.txt', 'r')
+correct = open('correct.txt', 'r').read()
 filename = "Logo.py"
 dateString = "09-11-2013 23:00:00"
 outputFile.write('CSID\tGrade\tComments\n')
@@ -23,10 +23,11 @@ def main():
       if "." not in item :
         myList.append( item )
   for csid in myList :
+    count += 1
     os.system('clear')
-    print('==========')
-    print(csid)
-    print('==========')
+    print('======================')
+    print(csid + " " + str(count) + " out of " + str(len(myList)))
+    print('======================')
     assign1( csid )
   outputFile.close()
 
@@ -115,7 +116,7 @@ def assign1( csid ) :
       print('Their output:')
       print(out)
       print('Correct output:')
-      print(correctFile.read())
+      print(correct)
       print('logo has ' + str(len(lines)) +' lines, not 19')
       #don't dock points for lateness or wrong filename here
       gradeInput = input("Grade out of 70 (no style, hit enter if 65): ")
@@ -136,6 +137,8 @@ def assign1( csid ) :
     style = input("Style/Comments (out of 30, hit enter for 30): ")
     if not style.isdigit() :
       style = 30
+    else :
+      style = int(style)
     
     #writing grade time!
     if late == 3 :

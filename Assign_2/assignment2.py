@@ -87,8 +87,18 @@ def assign2( csid , writeToFile) :
       process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
       out = process.communicate(bytes(creditCardNumber, 'UTF-8'))[0]
       answers.append(str(out)[2:-1])
-    print(answers)
-    
+      
+    answerCount = 0
+    for correctAnswer in correct.splitlines():
+      if correctAnswer in answers[answerCount]:  #Does not contain the correct formatted answer
+        print('Correct answer for #', answerCount+1)
+      else:
+        if correctAnswer.lower()[0:5] in answers[answerCount]: #We can change to to account for invalid or not
+          print ("correct answer but incorrect formatting")
+        #if not correctAnswer.lowerCase in answers[answerCount]:
+          #Deduct points for really wrong input
+      answerCount += 1
+     
   else:
     print('Their output:')
     print(out)

@@ -14,22 +14,27 @@ outputFile.write('CSID\tGrade\tComments\n')
 def main():
   out = subprocess.getoutput('ls ./')
   CSIDS = out.split("\n")
-  lowerBound = sys.argv[1]
-  upperBound = sys.argv[2]
-  myList = []
-  count = 0
-  for item in CSIDS :
-    if ord(item[0]) in range(ord(lowerBound), ord(upperBound)+1) :
-      if "." not in item :
-        myList.append( item )
-  for csid in myList :
-    count += 1
-    os.system('clear')
-    print('======================')
-    print(csid + " " + str(count) + " out of " + str(len(myList)))
-    print('======================')
-    assign1( csid )
-  outputFile.close()
+  if len(sys.argv) == 2:
+    lowerBound = sys.argv[1]
+    upperBound = sys.argv[2]
+    myList = []
+    count = 0
+    for item in CSIDS :
+      if ord(item[0]) in range(ord(lowerBound), ord(upperBound)+1) :
+        if "." not in item :
+          myList.append( item )
+    for csid in myList :
+      count += 1
+      os.system('clear')
+      print('======================')
+      print(csid + " " + str(count) + " out of " + str(len(myList)))
+      print('======================')
+      assign1( csid )
+    outputFile.close()
+  #singleton mode
+  else:
+    
+
 
 def assign1( csid ) :
   fileToGrade = ""

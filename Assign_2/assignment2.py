@@ -110,10 +110,10 @@ def assign2( csid , writeToFile) :
     print("Wrong:", str(wrongCount) + "/8")
     if(0 >= closeCount >= 4):
     	grade = 70 - (4 * wrongCount) 
-    	comment = " Output did not match instructors "
+    	comments += " Output did not match instructors, "
     elif(closeCount >= 4):
     	grade = 60 - (4 * wrongCount)
-    	comment = " Output did not match instructors "
+    	comments += " Output did not match instructors, "
 
       #TODO take of 5 points if they're closeCount is 0 to 4 and take off 10 if closeCount is greater than 4
       #TODO take off 4 * wrongCount points as well
@@ -143,7 +143,7 @@ def assign2( csid , writeToFile) :
   else :
     header = False
   style = input("Style/Comments (Enter a number out of 30 to represent their grade, hit enter for 30): ")
-  comment += input ("General Comments?:  ")
+  comments += input ("General Comments?:  ")
   if not style.isdigit() :
     style = 30
   else :

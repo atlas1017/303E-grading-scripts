@@ -75,8 +75,9 @@ def assign2( csid , writeToFile) :
     fileToGrade = input("Which file should I grade? ")
     if fileToGrade == "" :
       if writeToFile: 
-      	outputFile.write("0\tno file")
-      	return
+        outputFile.write("0\tno file")
+        os.chdir("..")
+        return
     else :
       splitted = subprocess.getoutput('ls -l ' + fileToGrade.replace(' ','\ ')).split()
       late = isLate(splitted)

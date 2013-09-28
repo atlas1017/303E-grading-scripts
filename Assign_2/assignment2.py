@@ -87,24 +87,44 @@ def assign2( csid , writeToFile) :
       process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
       out = process.communicate(bytes(creditCardNumber, 'UTF-8'))[0]
       answers.append(str(out)[2:-1])
-      
+     
+    perfectCount = 0
+    closeCount = 0 
     answerCount = 0
+    wrongCount = 0
     for correctAnswer in correct.splitlines():
       if correctAnswer in answers[answerCount]:  #Does not contain the correct formatted answer
         print('Correct answer for #', answerCount+1)
+        perfectCount += 1
       else:
-        if correctAnswer.lower()[0:5] in answers[answerCount]: #We can change to to account for invalid or not
-          print ("correct answer but incorrect formatting")
-        #if not correctAnswer.lowerCase in answers[answerCount]:
-          #Deduct points for really wrong input
+        if correctAnswer.lower()[0:5] in answers[answerCount].lower() and not "in" + correctAnswer.lower()[0:5] in answers[answerCount].lower(): #We can change to to account for invalid or not
+          print ("Correct answer for #", answerCount+1," but incorrect formatting")
+          print ("\t", correctAnswer[0:1],"-",answers[answerCount])
+          closeCount += 1
+        else:
+          print("Wrong answer")
+          wrongCount += 1
       answerCount += 1
+    print("Perfect:", str(perfectCount) + "/8")
+    print("Close:", str(closeCount) + "/8")
+    print("Wrong:", str(wrongCount) + "/8")
+    if(0 >= closeCount >= 4):
+    	grade = 70 - (4 * wrongCount) 
+    	comment = " Output did not match instructors "
+    elif(closeCount >= 4):
+    	grade = 60 - (4 * wrongCount)
+    	comment = " Output did not match instructors "
+
+      #TODO take of 5 points if they're closeCount is 0 to 4 and take off 10 if closeCount is greater than 4
+      #TODO take off 4 * wrongCount points as well
+      #TODO fix the else below to output the correct comments
      
   else:
-    print('Their output:')
-    print(out)
-    print('Correct output:')
-    print(correct)
-    print('logo has ' + str(len(lines)) +' lines, not 19')
+    #print('Their output:')
+    #print(out)
+    #print('Correct output:')
+    #print(correct)
+    #print('logo has ' + str(len(lines)) +' lines, not 19')
     #don't dock points for lateness or wrong filename here
     gradeInput = input("Grade out of 70 (no style, hit enter if 65): ")
     if gradeInput == '' :
@@ -117,12 +137,13 @@ def assign2( csid , writeToFile) :
   #os.system('vim ' + fileToGrade)
   input("Hit Enter to cat")
   print(subprocess.getoutput('cat ' + fileToGrade))
-  headerInput = input("Header(y or enter/n)? ")
+  headerInput = input("Header( (y or enter)  /  n)? ")
   if headerInput == 'y' or headerInput == '' :
     header = True
   else :
     header = False
-  style = input("Style/Comments (out of 30, hit enter for 30): ")
+  style = input("Style/Comments (Enter a number out of 30 to represent their grade, hit enter for 30): ")
+  comment += input ("General Comments?:  ")
   if not style.isdigit() :
     style = 30
   else :
@@ -140,10 +161,10 @@ def assign2( csid , writeToFile) :
       grade -= 10
     
     if wrongFileName :
-      comments += "wrong filename, "
+      comments += " wrong filename, "
       grade -= 10
     if not header :
-      comments += "no/malformed header, "
+      comments += " no/malformed header, "
       grade -= 10
 
     if linesWrong > 0 and linesWrong < 3 : 

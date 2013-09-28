@@ -49,7 +49,7 @@ def assign2( csid , writeToFile) :
   style = 30
   wrongFileName = False
   header = True
-  comments = ""
+  comments = " "
   manualComments = ""
 
   os.chdir(csid)

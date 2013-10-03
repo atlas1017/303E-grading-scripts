@@ -5,10 +5,10 @@ import sys
 import re
 import difflib
 
-outputFile = open('assignment2.txt', 'w')
 correct = open('correct.txt', 'r').read()
-filename = "CreditCard.py"
-dateString = "09-23-2013 23:00:00"
+outputFilename = 'assignment3.txt'
+filename = "EasterSunday.py"
+dateString = "09-27-2013 23:00:00"
 outputFile.write('CSID\tGrade\tComments\n')
 inputArray = open('numbers.txt','r').read().split()
 
@@ -16,6 +16,7 @@ def main():
   out = subprocess.getoutput('ls ./')
   CSIDS = out.split("\n")
   if len(sys.argv) == 3:
+    outputFile = open(outputFilename, 'w')
     lowerBound = sys.argv[1]
     upperBound = sys.argv[2]
     myList = []
@@ -41,16 +42,14 @@ def main():
     assign2( csid , False)
   outputFile.close()
 
-def assign2( csid , writeToFile) :
+def assign3( csid , writeToFile) :
   fileToGrade = ""
   late = 0
-  linesWrong = 0
   grade = 70
   style = 30
   wrongFileName = False
   header = True
   comments = " "
-  manualComments = ""
 
   os.chdir(csid)
   if writeToFile: outputFile.write(csid + "\t")
@@ -86,15 +85,16 @@ def assign2( csid , writeToFile) :
   #grading time!
   if not fileToGrade == "" and late < 3:
     answers = []
-    for creditCardNumber in inputArray:
+    for year in inputArray:
       process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-      out = process.communicate(bytes(creditCardNumber, 'UTF-8'))[0]
+      out = process.communicate(bytes(year, 'UTF-8'))[0]
       answers.append(str(out)[2:-1])
      
     perfectCount = 0
     closeCount = 0 
     answerCount = 0
     wrongCount = 0
+    #TODO come up with criteria and a rubric for perfect,close, and wrong cases
     for correctAnswer in correct.splitlines():
       if correctAnswer in answers[answerCount]:  #Does not contain the correct formatted answer
         print('Correct answer for #', answerCount+1)
@@ -117,24 +117,6 @@ def assign2( csid , writeToFile) :
     elif(closeCount >= 4):
     	grade = 60 - (4 * wrongCount)
     	comments += " Output did not match instructors, "
-
-      #TODO take of 5 points if they're closeCount is 0 to 4 and take off 10 if closeCount is greater than 4
-      #TODO take off 4 * wrongCount points as well
-      #TODO fix the else below to output the correct comments
-     
-  else:
-    #print('Their output:')
-    #print(out)
-    #print('Correct output:')
-    #print(correct)
-    #print('logo has ' + str(len(lines)) +' lines, not 19')
-    #don't dock points for lateness or wrong filename here
-    gradeInput = input("Grade out of 70 (no style, hit enter if 65): ")
-    if gradeInput == '' :
-      grade = 65
-    else :
-      grade = int(gradeInput)
-    manualComments = input("Comments: ")
 
   #checking for header and style
   #os.system('vim ' + fileToGrade)
@@ -170,13 +152,7 @@ def assign2( csid , writeToFile) :
       comments += " no/malformed header, "
       grade -= 10
 
-    if linesWrong > 0 and linesWrong < 3 : 
-      comments += "improperly formed superman logo, "
-      grade -= 5
-    elif linesWrong > 3 :
-      comments += "nonsensical superman logo, "
-      grade -= 5
-    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', ') + manualComments)
+    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', '))
       
   if writeToFile: outputFile.write('\n')
   os.chdir("..")

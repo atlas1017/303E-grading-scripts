@@ -7,16 +7,16 @@ import difflib
 
 correct = open('correct.txt', 'r').read()
 outputFilename = 'assignment3.txt'
+outputFile = open(outputFilename, 'w+')
+outputFile.write('CSID\tGrade\tComments\n')
 filename = "EasterSunday.py"
 dateString = "09-27-2013 23:00:00"
-outputFile.write('CSID\tGrade\tComments\n')
-inputArray = open('numbers.txt','r').read().split()
+inputArray = open('input.txt','r').read().split()
 
 def main():
   out = subprocess.getoutput('ls ./')
   CSIDS = out.split("\n")
   if len(sys.argv) == 3:
-    outputFile = open(outputFilename, 'w')
     lowerBound = sys.argv[1]
     upperBound = sys.argv[2]
     myList = []
@@ -31,7 +31,7 @@ def main():
       print('======================')
       print(csid + " " + str(count) + " out of " + str(len(myList)))
       print('======================')
-      assign2( csid , True)
+      assign3( csid , True)
   #singleton mode
   else:
     csid = sys.argv[1]
@@ -39,7 +39,7 @@ def main():
     print('======================')
     print(csid)
     print('======================')
-    assign2( csid , False)
+    assign3( csid , False)
   outputFile.close()
 
 def assign3( csid , writeToFile) :
@@ -100,23 +100,23 @@ def assign3( csid , writeToFile) :
         print('Correct answer for #', answerCount+1)
         perfectCount += 1
       else:
-        if correctAnswer.lower()[0:5] in answers[answerCount].lower() and not "in" + correctAnswer.lower()[0:5] in answers[answerCount].lower(): #We can change to to account for invalid or not
+        correctSplitted = correctAnswer.split()
+        if  correctSplitted[1] in answers[answerCount] and correctSplitted[-1].lower() in answers[answerCount].lower() and correctSplitted[-2] in answers[answerCount]:
           print ("Correct answer for #", answerCount+1," but incorrect formatting")
-          print ("\t", correctAnswer[0:1],"-",answers[answerCount])
+          print ("\t", correctAnswer," vs. ",answers[answerCount])
           closeCount += 1
         else:
           print("Wrong answer")
           wrongCount += 1
       answerCount += 1
-    print("Perfect:", str(perfectCount) + "/8")
-    print("Close:", str(closeCount) + "/8")
-    print("Wrong:", str(wrongCount) + "/8")
-    if(0 >= closeCount >= 4):
-    	grade = 70 - (4 * wrongCount) 
-    	comments += " Output did not match instructors, "
-    elif(closeCount >= 4):
-    	grade = 60 - (4 * wrongCount)
-    	comments += " Output did not match instructors, "
+    print("Perfect:", str(perfectCount) + "/10")
+    print("Close:", str(closeCount) + "/10")
+    print("Wrong:", str(wrongCount) + "/10")
+    if wrongCount != 0 and closeCount != 0:
+        grade -= (2 * wrongCount) 
+        grade -= (1 * closeCount)
+        comments += " Output did not match instructors, "
+
 
   #checking for header and style
   #os.system('vim ' + fileToGrade)
@@ -135,10 +135,13 @@ def assign3( csid , writeToFile) :
     style = int(style)
   
   #writing grade time!
-  if late == 3 :
-    if writeToFile: outputFile.write('0\t 3 days late')
+  if late == -1:
+    if writeToFile: outputFile.write('0\t More than 7 days late')
   else :
-    if late == 2 :
+    if late == 3:
+      comments = "3 - 7 days late, "
+      grade -= 30
+    elif late == 2 :
       comments = "2 days late, "
       grade -= 20
     elif late == 1 :
@@ -162,6 +165,7 @@ def isLate( splitted ):
   dueDate = datetime.strptime(dateString,"%m-%d-%Y %H:%M:%S")  
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
+  lateSev = dueDate + timedelta(days=7)
   turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
@@ -169,7 +173,9 @@ def isLate( splitted ):
     return 1
   elif turninDate <= lateTwo :
     return 2
-  else :
+  elif turninDate <= lateSev:
     return 3
+  else :
+    return -1
 
 main()

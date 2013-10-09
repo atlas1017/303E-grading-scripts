@@ -112,7 +112,7 @@ def assign4( csid , writeToFile) :
     print("Perfect:", str(perfectCount) + "/10")
     print("Close:", str(closeCount) + "/10")
     print("Wrong:", str(wrongCount) + "/10")
-    if wrongCount != 0 and closeCount != 0:
+    if wrongCount != 0 or closeCount != 0:
         grade -= (2 * wrongCount) 
         grade -= (1 * closeCount)
         comments += " Output did not match instructors, "

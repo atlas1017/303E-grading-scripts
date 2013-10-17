@@ -87,7 +87,10 @@ def assign5( csid , writeToFile) :
     answers = []
     for x in range(0,len(inputArray)-2):
       process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-      out = process.communicate(bytes(inputArray[x], 'UTF-8'))[0]
+      try:
+        out = process.communicate(bytes(inputArray[x], 'UTF-8'))[0]
+      except KeyboardInterrupt:
+        grade -= 10
       answers.append(str(out)[2:-1])
 
     correctCount = 0
@@ -124,7 +127,10 @@ def assign5( csid , writeToFile) :
     # Checking if the user handles bad input correctly
     # Counts for 5 test cases
     process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-    out = process.communicate(bytes(inputArray[len(inputArray)-2] + "\n" + inputArray[len(inputArray)-1], 'UTF-8'))[0]
+    try:
+      out = process.communicate(bytes(inputArray[len(inputArray)-2] + "\n" + inputArray[len(inputArray)-1], 'UTF-8'))[0]
+    except KeyboardInterrupt:
+      grade -= 10
     answer = str(out)[2:-1]
     nums = re.findall("\D+(\d+\.\d+)\D+(\d+\.\d+e?-?\d*)", answer)
     if len(nums) == 0:

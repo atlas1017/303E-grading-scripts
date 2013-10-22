@@ -1,5 +1,6 @@
 from os.path import os, exists
 from datetime import datetime, timedelta
+from functools import *
 import subprocess
 import sys
 import re
@@ -13,7 +14,6 @@ outputFile.write('CSID\tGrade\tComments\n')
 filename = "Hailstone.py"
 dateString = "10-11-2013 23:00:00"
 inputArray = open('input.txt','r').read().split("\n")
-inputArray = inputArray[0:-1]
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -87,19 +87,21 @@ def assign6( csid , writeToFile) :
   #grading time!
   if not fileToGrade == "" and late < 3:
     answers = []
-    for x in range(0, len(inputArray) - 1):
-      process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
+    for x in range(len(inputArray)):
+      process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
       try:
-        out = process.communicate(bytes(inputArray[x].split()[0] + '\n' + inputArray[x].split()[1], 'UTF-8'))[0]
+        out = process.communicate(bytes('\n'.join(inputArray[x].split()) + '\n', 'UTF-8'))[0]
       except KeyboardInterrupt:
-        grade -= 10
+        pass
       answers.append(str(out)[2:-1])
 
     count = 0
     perfectCount = 0
     closeCount = 0 
     wrongCount = 0
-    for answer in answers:
+    for answer, cor in zip(answers,correct):
+      cor = cor.split()
+      #extracting relevant data form the students output
       nums = re.findall("\D+(\d+)\D+(\d+)", answer)
       if len(nums) != 1:
         wrongCount += 1
@@ -111,47 +113,21 @@ def assign6( csid , writeToFile) :
       cycleLength = int(nums[0][1])
 
       #perfect check
-      perfect = "Enter starting number of the range: Enter ending number of the range: The number " + str(correct[count].split()[0]) + " has the longest cycle length of " + str(correct[count].split()[1])
-      regExMatch = "\s*Enter\s+starting\s+number\s+of\s+the\s+range:\s+Enter\s+ending\s+number\s+of\s+the\s+range:\s+The\s+number\s+" + str(correct[count].split()[0]) + "\s+has\s+the\s+longest\s+cycle\s+length\s+of\s+" + str(correct[count].split()[1] + "\D")
-      if re.match(regExMatch, answer, re.IGNORECASE):
+      if count >= 6: #negative testing time! 
+        perfect = "Enter starting number of the range: \nEnter ending number of the range: \n" * 6 +"The number " + str(cor[0]) + " has the longest cycle length of " + str(cor[1]+".")
+      else:
+        perfect = "Enter starting number of the range: \nEnter ending number of the range: \nThe number " + str(cor[0]) + " has the longest cycle length of " + str(cor[1]+".")
+
+      if perfect == answer.replace('\\n','\n').rstrip('\n'):
         print('Perfect answer for #', count + 1)
         perfectCount +=1
-      elif longNum == int(correct[count].split()[0]) and cycleLength == int(correct[count].split()[1]):
-        print('Closed answer for #', count + 1)
-        print("\tPerfect: "+perfect+"\n\tvs.\n\tActual : "+answer)
+      elif longNum == int(cor[0]) and cycleLength == int(cor[1]):
+        print('Close answer for #', count + 1)
+        print(perfect+"\n\tvs.\n\t"+answer.replace('\\n','\n\t'))
         closeCount += 1
       else:
         print('Wrong answer for #', count + 1)
-        print("\tPerfect: "+perfect+"\n\tvs.\n\tActual : "+answer)
-        wrongCount += 1
-      count += 1
-
-    # Checking if the user handles bad input correctly
-    # Counts for 5 test cases
-    process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
-    try:
-      badInput = inputArray[len(inputArray)-1].split()
-      out = process.communicate(bytes(badInput[0] + "\n" + badInput[1] + "\n" + badInput[2] + "\n" + badInput[3] + "\n" + badInput[4] + "\n" + badInput[5], 'UTF-8'))[0]
-    except KeyboardInterrupt:
-      grade -= 10
-    answer = str(out)[2:-1]
-    nums = re.findall("\D+(\d+)\D+(\d+)", answer)
-    if len(nums) != 1:
-      wrongCount += 5
-    elif len(nums[0]) != 2:
-      wrongCount += 5
-    else:
-      longNum = int(nums[0][0])
-      cycleLength = int(nums[0][1])
-
-      #perfect check
-      if longNum == int(correct[-1].split()[0]) and cycleLength == int(correct[-1].split()[1]):
-        print('Perfect answer for #', count + 1)
-        perfectCount +=1
-      else:
-        print('Wrong answer for #', count + 1)
-        perfect = "Enter starting number of the range: Enter ending number of the range: The number " + str(correct[-1].split()[0]) + " has the longest cycle length of " + str(correct[-1].split()[1])
-        print("\tPerfect: "+perfect+"\n\tvs.\n\tActual : "+answer)
+        print(perfect+"\n\tvs.\n\t"+answer.replace('\\n','\n\t'))
         wrongCount += 1
       count += 1
 
@@ -159,7 +135,7 @@ def assign6( csid , writeToFile) :
     print("Close:", str(closeCount) + "/10")
     print("Wrong:", str(wrongCount) + "/10")
     if wrongCount != 0 or closeCount != 0:
-        grade -= (2 * wrongCount) 
+        grade -= (3 * wrongCount) 
         grade -= (1 * closeCount)
         comments += " Output did not match instructors P: "+str(perfectCount)+" C: "+str(closeCount)+" W: "+str(wrongCount)+ ", "
 

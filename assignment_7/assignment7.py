@@ -7,8 +7,7 @@ import re
 import difflib
 
 outputFilename = 'assignment7.txt'
-outputFile = open(outputFilename, 'w+')
-outputFile.write('CSID\tGrade\tComments\n')
+outputFile = open(outputFilename, 'a')
 filename = "Deal.py"
 dateString = "10-15-2013 23:00:00"
 
@@ -16,6 +15,7 @@ def main():
   out = subprocess.getoutput('ls ./')
   CSIDS = out.split("\n")
   if len(sys.argv) == 3:
+    outputFile.write('CSID\tGrade\tComments\n')
     lowerBound = sys.argv[1]
     upperBound = sys.argv[2]
     myList = []

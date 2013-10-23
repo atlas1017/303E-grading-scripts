@@ -90,21 +90,27 @@ def assign6( csid , writeToFile) :
       pass
     #yup this next line of code is a little funky but yeah... it works and I'm lazy --Devin
     answer = (str(out)[2:-1]).replace('\\n','\n').rstrip().split('\n')
-    switch = int(re.findall("\D+\d+\.(\d\d)",answer[-2])[0])
-    noSwitch = int(re.findall("\D+\d+\.(\d\d)",answer[-1])[0])
-    if switch + noSwitch == 100 and ( 66 <= switch <= 68) and (32 <= noSwitch <= 34):
+    switch = int(re.findall("\D+\d+\.(\d+)",answer[-2])[0])
+    noSwitch = int(re.findall("\D+\d+\.(\d+)",answer[-1])[0])
+    perfect = True
+    #penalize for not rounding
+    if switch > 99 or noSwitch > 99:
+      perfect = False
+      switch = int(str(switch)[:2])
+      noSwitch = int(str(switch)[:2])
+    if perfect and switch + noSwitch == 100 and ( 66 <= switch <= 68) and (32 <= noSwitch <= 34):
       pass
       print("Perfect (feels nice to be nice =D)")
     elif switch + noSwitch == 100 and (( 66 <= switch <= 68) or (32 <= noSwitch <= 34)):
       grade -= 10
       print("Close")
-      print(answer[-3:])
+      print(answer[-2:])
       print("Prob when switching: " + str(switch) + " Prob when not switching: " +str(noSwitch))
       comments += "Somewhat wrong output!"
     else:
       grade -= 30
       print("Wrong")
-      print(answer[-3:])
+      print(answer[-2:])
       print("Prob when switching: " + str(switch) + " Prob when not switching: " +str(noSwitch))
       comments += "Wrong output!"
   #checking for header and style

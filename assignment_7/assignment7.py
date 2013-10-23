@@ -95,7 +95,7 @@ def assign6( csid , writeToFile) :
     if switch + noSwitch == 100 and ( 66 <= switch <= 68) and (32 <= noSwitch <= 34):
       pass
       print("Perfect (feels nice to be nice =D)")
-    elif switch + noSwitch == 100 or ( 66 <= switch <= 68) or (32 <= noSwitch <= 34):
+    elif switch + noSwitch == 100 and (( 66 <= switch <= 68) or (32 <= noSwitch <= 34)):
       grade -= 10
       print("Close")
       print(answer[-3:])

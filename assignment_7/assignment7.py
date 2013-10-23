@@ -96,8 +96,8 @@ def assign6( csid , writeToFile) :
     #penalize for not rounding
     if switch > 99 or noSwitch > 99:
       perfect = False
-      switch = int(str(switch)[:2])
-      noSwitch = int(str(noSwitch)[:2])
+      switch = round(int(str(switch)[:3]), -1) // 10
+      noSwitch = round(int(str(noSwitch)[:3]), -1) // 10
     if perfect and switch + noSwitch == 100 and ( 66 <= switch <= 68) and (32 <= noSwitch <= 34):
       pass
       print("Perfect (feels nice to be nice =D)")

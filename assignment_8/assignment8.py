@@ -97,8 +97,8 @@ def assign8( csid , writeToFile) :
     last_line = "Difference = Calculated PI - math.pi"
     regex_perfect = "^num = 100[0 ]{5}   Calculated PI = \d\.\d{6}   Difference = [+-]\d\.\d{6}$"
     regex_left = "100[\d\s]{5}"
-    regex_mid = "=\s*(\d\.\d{6})"
-    regex_right = "[+-]\d\.\d{6}"
+    regex_mid = "=\s*(\d\.\d{6})\D+"
+    regex_right = "[+-]\d\.\d{6}$"
 
 
     # grab pi and difference

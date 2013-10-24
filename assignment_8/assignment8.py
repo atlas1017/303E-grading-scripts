@@ -95,9 +95,10 @@ def assign8( csid , writeToFile) :
     # perfect match
     first_line = "Computation of PI using Random Numbers"
     last_line = "Difference = Calculated PI - math.pi"
-    regex_left = "num = 100[\d\s]{5}"
-    regex_mid = "Calculated PI = (\d\.\d{6})"
-    regex_right = "Difference = [+-]\d\.\d{6}"
+    regex_perfect = "^num = 100[0 ]{5}   Calculated PI = \d\.\d{6}   Difference = [+-]\d\.\d{6}$"
+    regex_left = "100[\d\s]{5}"
+    regex_mid = "=\s*(\d\.\d{6})"
+    regex_right = "[+-]\d\.\d{6}"
 
 
     # grab pi and difference
@@ -109,7 +110,7 @@ def assign8( csid , writeToFile) :
         out = process.communicate(bytes('50000', 'UTF-8'))[0]
       except KeyboardInterrupt:
         pass
-      answer = list(filter(lambda line: len(line) is not 0, str(out)[2:-1].replace('\\n', '\n').rstrip().lstrip().split('\n')))
+      answer = list(filter(lambda line: len(line.rstrip()) is not 0, str(out)[2:-1].replace('\\n', '\n').rstrip().lstrip().split('\n')))
       print('\n'.join(answer))
 
       # grab the difference
@@ -121,18 +122,23 @@ def assign8( csid , writeToFile) :
       # perfect matching
       correct_format_other = correct_format_other and first_line in answer and last_line in answer and len(answer) is 8
       try:
+        perfect_matches = list(filter(lambda match: match is not None, [re.search(regex_perfect, line) for line in answer]))
+        correct_format_other = correct_format_other and len(perfect_matches) is 6
+      except:
+        correct_format_other = False
+      try:
         left_matches = list(filter(lambda match: match is not None, [re.search(regex_left, line) for line in answer]))
-        correct_format_left = correct_format_left and len(list(left_matches)) is 6
-      except Exception as e:
+        correct_format_left = correct_format_left and len(left_matches) is 6
+      except:
         correct_format_left = False
       try:
         mid_matches = list(filter(lambda match: match is not None, [re.search(regex_mid, line) for line in answer]))
-        correct_format_mid = correct_format_mid and len(list(mid_matches)) is 6
+        correct_format_mid = correct_format_mid and len(mid_matches) is 6
       except:
         correct_format_mid = False
       try:
         right_matches = list(filter(lambda match: match is not None, [re.search(regex_right, line) for line in answer]))
-        correct_format_right = correct_format_right and len(list(right_matches)) is 6
+        correct_format_right = correct_format_right and len(right_matches) is 6
       except:
         correct_format_right = False
 

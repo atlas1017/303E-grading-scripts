@@ -50,7 +50,7 @@ def assign8( csid , writeToFile) :
   style = 30
   wrongFileName = False
   header = True
-  comments = " "
+  comments = []
 
   os.chdir(csid)
   if writeToFile: outputFile.write(csid + "\t")
@@ -95,14 +95,13 @@ def assign8( csid , writeToFile) :
     # perfect match
     first_line = "Computation of PI using Random Numbers"
     last_line = "Difference = Calculated PI - math.pi"
-    regex_perfect = "^num = 100[0 ]{5}   Calculated PI = \d\.\d{6}   Difference = [+-]\d\.\d{6}$"
+    regex_perfect = "^num = 100[0 ]{5}   Calculated PI = \d\.\d{6}   Difference = [+-]\d(?:\.\d{6}|e[+-]\d{5})$"
     regex_left = "100[\d\s]{5}"
-    regex_mid = "=\s*(\d\.\d{6})\D+"
-    regex_right = "[+-]\d\.\d{6}$"
-
+    regex_mid = "=\s*[\d\.]{8}"
+    regex_right = "[+-e\d\.]{9}$"
 
     # grab pi and difference
-    regex_grab = "[+-]?\d+(?:\.\d+(?:e[+-]?\d*)?)?"
+    regex_grab = "[+-]?\d+(?:\.\d+|(?:\.\d+)?e[+-]\d+)?"
 
     for run_num in range(averageNumRuns):
       process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
@@ -110,7 +109,7 @@ def assign8( csid , writeToFile) :
         out = process.communicate(bytes('50000', 'UTF-8'))[0]
       except KeyboardInterrupt:
         pass
-      answer = list(filter(lambda line: len(line.rstrip()) is not 0, str(out)[2:-1].replace('\\n', '\n').rstrip().lstrip().split('\n')))
+      answer = list(line.rstrip().lstrip() for line in str(out)[2:-1].replace('\\n', '\n').rstrip().lstrip().split('\n'))
       print('\n'.join(answer))
 
       # grab the difference
@@ -120,7 +119,7 @@ def assign8( csid , writeToFile) :
       calculated_values.append(grabbed_diff)
 
       # perfect matching
-      correct_format_other = correct_format_other and first_line in answer and last_line in answer and len(answer) is 8
+      correct_format_other = correct_format_other and first_line in answer and last_line in answer and len(answer) is 10
       try:
         perfect_matches = list(filter(lambda match: match is not None, [re.search(regex_perfect, line) for line in answer]))
         correct_format_other = correct_format_other and len(perfect_matches) is 6
@@ -144,54 +143,67 @@ def assign8( csid , writeToFile) :
 
       # 0. verify decreasing error as n increases
       # 1. verify avg_diff + avg_pi is very close to math.pi
+      # 2. verify avg_pi is within 0.5 of math.pi
+      try:
+        averages = list(map(lambda tup: sum(tup) / len(tup), zip(*[[math.fabs(x) for x in run] for run in calculated_values])))
+        average_pi = [math.fabs(x) for x in grabbed_pi]
+        average_pi = sum(average_pi) / len(average_pi)
+        print("This Run: %s" % ', '.join(['%.6f' % math.fabs(x) for x in grabbed_diff]))
+        print("All Runs: %s\n" % ', '.join(map(lambda i: '%.6f' % i, averages)))
+        valid_output = valid_output and all([(math.fabs(calc - math.pi - diff) < 0.0001) for calc, diff in zip(grabbed_pi, grabbed_diff)])
+        valid_output = valid_output and math.fabs(math.pi - average_pi) < 0.5
+      except:
+        valid_output = False
+
       # stops if either the current run or the average runs pass condition 0
-      # and if condition 1 passes
-      averages = list(map(lambda tup: sum(tup) / len(tup), zip(*[[math.fabs(x) for x in run] for run in calculated_values])))
-      print("This Run: %s" % ', '.join(['%.6f' % math.fabs(x) for x in grabbed_diff]))
-      print("All Runs: %s\n" % ', '.join(map(lambda i: '%.6f' % i, averages)))
-      valid_output = valid_output and all([(math.fabs(calc - math.pi - diff) < 0.0001) for calc, diff in zip(grabbed_pi, grabbed_diff)])
       if all(x >= y for x,y in zip(averages, averages[1:])) or all(math.fabs(x) >= math.fabs(y) for x,y in zip(grabbed_diff, grabbed_diff[1:])):
         break
 
     if correct_format_left and correct_format_mid and correct_format_right and correct_format_other and valid_output:
       print("Perfect! ^_^")
+    elif not (correct_format_left or correct_format_mid or correct_format_right or correct_format_other or valid_output):
+      print("non-working code. ='(")
+      comments.append("non-working code (-30)")
     else:
       if not correct_format_left:
-        print("num not left justified")
-        comments += ", num not left justified"
-        grade -= 6
+        print("num not left justified (-5)")
+        comments.append("num not left justified (-5)")
+        grade -= 5
       if not correct_format_mid:
-        print("pi not expressed to six decimals")
-        comments += ", pi not expressed to six decimals"
-        grade -= 6
+        print("pi not expressed to six decimals or with sign (-5)")
+        comments.append("pi not expressed to six decimals or with sign (-5)")
+        grade -= 5
       if not correct_format_right:
-        print("diff not expressed to six decimals or without sign")
-        comments += ", diff not expressed to six decimals or without sign"
-        grade -= 8
+        print("diff not expressed to six decimals or without sign (-5)")
+        comments.append("diff not expressed to six decimals or without sign (-5)")
+        grade -= 5
       if not correct_format_other:
-        print("spacing or other general misformatting output")
-        comments += ", spacing or other general misformatting output"
+        print("spacing or other general misformatting output (-5)")
+        comments.append("spacing or other general misformatting output (-5)")
         grade -= 5
       if not valid_output:
-        print("outputs do not add up")
-        comments += ", outputs do not add up"
+        print("calculations are wrong (-5)")
+        comments.append("diff is wrong sign or just wrong (-5)")
         grade -= 5
 
   #checking for header and style
   #os.system('vim ' + fileToGrade)
   input("Hit Enter to cat")
   print(subprocess.getoutput('cat ' + fileToGrade))
-  headerInput = input("Header( (y or enter)  /  n)? ")
+  headerInput = input("Header and comments? (y/n, hit enter for y): ")
   if headerInput == 'y' or headerInput == '' :
     header = True
   else :
     header = False
   style = input("Style/Other (Out of 30, hit enter for 30): ")
-  comments += ", %s" % input("General Comments?: ")
+  gen_comments = input("General Comments?: ").rstrip().lstrip()
+  gen_comments = gen_comments if len(gen_comments) is not 0 else "looks fine"
   if not style.isdigit() :
     style = 30
   else :
     style = int(style)
+  gen_comments += " (%+d)" % (style - 30)
+  comments.append("%s" % gen_comments)
   
   #writing grade time!
   if late == -1:
@@ -199,23 +211,23 @@ def assign8( csid , writeToFile) :
     print('Late more than 7 days!')
   else :
     if late == 3:
-      comments = "3 - 7 days late, "
+      comments.append("3 - 7 days late (-30)")
       grade -= 30
     elif late == 2 :
-      comments = "2 days late, "
+      comments.append("2 days late (-20)")
       grade -= 20
     elif late == 1 :
-      comments = "1 day late, "
+      comments.append("1 day late (-10)")
       grade -= 10
     
     if wrongFileName :
-      comments += " wrong filename, "
+      comments.append("wrong filename (-10)")
       grade -= 10
     if not header :
-      comments += " no/malformed header, "
+      comments.append("missing comments or malformed header (-10)")
       grade -= 10
 
-    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', '))
+    if writeToFile: outputFile.write(str(grade+style) + "\t" + ', '.join(comments))
       
   if writeToFile: outputFile.write('\n')
   os.chdir("..")

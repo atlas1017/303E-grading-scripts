@@ -11,7 +11,7 @@ outputFilename = 'assignment8.txt'
 outputFile = open(outputFilename, 'a')
 averageNumRuns = 5
 filename = "CalculatePI.py"
-dateString = "10-18-2013 23:00:00"
+dateString = "10-18-2013 23:59:59"
 
 def main():
   out = subprocess.getoutput('ls ./')

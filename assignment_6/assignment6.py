@@ -85,7 +85,7 @@ def assign6( csid , writeToFile) :
       wrongFileName = True
 
   #grading time!
-  if not fileToGrade == "" and late < 3:
+  if not fileToGrade == "" and late != -1:
     answers = []
     for x in range(len(inputArray)):
       process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)

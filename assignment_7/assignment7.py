@@ -83,16 +83,24 @@ def assign6( csid , writeToFile) :
 
   #grading time!
   if not fileToGrade == "" and late != -1:
+    out = "XXInterrputed sprobs will be set to 13X"
     process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     try:
       out = process.communicate(bytes('50000', 'UTF-8'))[0]
     except KeyboardInterrupt:
       pass
     #yup this next line of code is a little funky but yeah... it works and I'm lazy --Devin
-    answer = (str(out)[2:-1]).replace('\\n','\n').rstrip().split('\n')
-    switch = int(re.findall("\D+\d+\.(\d+)",answer[-2])[0])
-    noSwitch = int(re.findall("\D+\d+\.(\d+)",answer[-1])[0])
     perfect = True
+    wrong = False
+    answer = (str(out)[2:-1]).replace('\\n','\n').rstrip().split('\n')
+    try:
+      switch = int(re.findall("\D+\d+\.(\d+)",answer[-2])[0])
+      noSwitch = int(re.findall("\D+\d+\.(\d+)",answer[-1])[0])
+    except IndexError:
+      wrong = True
+      perfect = False
+      switch = 1337
+      noSwitch = 1337
     #penalize for not rounding
     if switch > 99 or noSwitch > 99:
       perfect = False
@@ -101,7 +109,7 @@ def assign6( csid , writeToFile) :
     if perfect and switch + noSwitch == 100 and ( 66 <= switch <= 68) and (32 <= noSwitch <= 34):
       pass
       print("Perfect (feels nice to be nice =D)")
-    elif switch + noSwitch == 100 and (( 66 <= switch <= 68) or (32 <= noSwitch <= 34)):
+    elif not wrong and switch + noSwitch == 100 and (( 66 <= switch <= 68) or (32 <= noSwitch <= 34)):
       grade -= 10
       print("Close")
       print(answer[-2:])

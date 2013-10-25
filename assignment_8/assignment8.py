@@ -101,7 +101,7 @@ def assign8( csid , writeToFile) :
     regex_right = "[+-e\d\.]{9}$"
 
     # grab pi and difference
-    regex_grab = "[+-]?\d+(?:\.\d+|(?:\.\d+)?e[+-]\d+)?"
+    regex_grab = "[+-]?\d*\.?\d+(?:[eE][+-]\d+)?"
 
     for run_num in range(averageNumRuns):
       process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE, stderr = subprocess.PIPE)

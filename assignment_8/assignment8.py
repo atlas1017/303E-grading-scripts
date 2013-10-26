@@ -11,7 +11,7 @@ outputFilename = 'assignment8.txt'
 outputFile = open(outputFilename, 'a')
 averageNumRuns = 5
 filename = "CalculatePI.py"
-dateString = "10-18-2013 23:59:59"
+dateString = "10-18-2013 23:00:00"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -108,7 +108,7 @@ def assign8( csid , writeToFile) :
       try:
         out = process.communicate(bytes('50000', 'UTF-8'))[0]
       except KeyboardInterrupt:
-        pass
+        out = "\n\n\n\n"
       answer = list(line.rstrip().lstrip() for line in str(out)[2:-1].replace('\\n', '\n').rstrip().lstrip().split('\n'))
       print('\n'.join(answer))
 

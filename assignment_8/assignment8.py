@@ -113,10 +113,13 @@ def assign8( csid , writeToFile) :
       print('\n'.join(answer))
 
       # grab the difference
-      raw_grabbed = list(filter(lambda match: len(match) > 0, [re.findall(regex_grab, line) for line in answer]))
-      grabbed_pi = [float(pi) for (_, pi, _) in raw_grabbed]
-      grabbed_diff = [float(diff) for (_, _, diff) in raw_grabbed]
-      calculated_values.append(grabbed_diff)
+      try:
+        raw_grabbed = list(filter(lambda match: len(match) > 0, [re.findall(regex_grab, line) for line in answer]))
+        grabbed_pi = [float(pi) for (_, pi, _) in raw_grabbed]
+        grabbed_diff = [float(diff) for (_, _, diff) in raw_grabbed]
+        calculated_values.append(grabbed_diff)
+      except:
+        pass
 
       # perfect matching
       correct_format_other = correct_format_other and first_line in answer and last_line in answer and len(answer) is 10

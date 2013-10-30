@@ -19,11 +19,11 @@ def main():
   if len(sys.argv) == 3:
     outputFile.write('CSID\tGrade\tComments\n')
     lowerBound = sys.argv[1]
-    upperBound = sys.argv[2]
+    upperBound = sys.argv[2] + '~';
     myList = []
     count = 0
-    for item in CSIDS :
-      if ord(item[0]) in range(ord(lowerBound), ord(upperBound)+1) :
+    for item in CSIDS:
+      if lowerBound <= item <= upperBound:
         if "." not in item :
           myList.append( item )
     for csid in myList :
@@ -166,7 +166,8 @@ def assign8( csid , writeToFile) :
       print("Perfect! ^_^")
     elif not (correct_format_left or correct_format_mid or correct_format_right or correct_format_other or valid_output):
       print("non-working code. ='(")
-      comments.append("non-working code (-30)")
+      comments.append("non-working code (-25)")
+      grade -= 25
     else:
       if not correct_format_left:
         print("num not left justified (-5)")

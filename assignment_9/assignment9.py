@@ -248,8 +248,9 @@ def getAnswerValue(answerValues, answerNumber):
 def getNextCorrectLine(correct):
   if getNextCorrectLine.lineCounter < len(correct):
     getNextCorrectLine.lineCounter += 1
-    return correct[getNextCorrectLine.lineCounter - 1]
-  return ''
+  else :
+    getNextCorrectLine.lineCounter = 1
+  return correct[getNextCorrectLine.lineCounter - 1]
 getNextCorrectLine.lineCounter = 0
       
 #returns the number of days late an assignment is

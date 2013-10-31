@@ -19,11 +19,11 @@ def main():
   CSIDS = out.split("\n")
   if len(sys.argv) == 3:
     lowerBound = sys.argv[1]
-    upperBound = sys.argv[2]
+    upperBound = sys.argv[2] + '~';
     myList = []
     count = 0
-    for item in CSIDS :
-      if ord(item[0]) in range(ord(lowerBound), ord(upperBound)+1) :
+    for item in CSIDS:
+      if lowerBound <= item <= upperBound:
         if "." not in item :
           myList.append( item )
     for csid in myList :

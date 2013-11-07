@@ -6,6 +6,13 @@ Enter lower limit: Enter upper limit:
 12 = 5 + 7
 The maximum number of pairs = 2
 Enter lower limit: Enter upper limit:
+8 = 3 + 5
+10 = 3 + 7 = 5 + 5
+12 = 5 + 7
+14 = 3 + 11 = 7 + 7
+16 = 3 + 13 = 5 + 11
+The maximum number of pairs = 2
+Enter lower limit: Enter upper limit:
 10 = 3 + 7 = 5 + 5
 12 = 5 + 7
 14 = 3 + 11 = 7 + 7

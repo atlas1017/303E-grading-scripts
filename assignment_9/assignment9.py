@@ -19,11 +19,11 @@ def main():
   CSIDS = out.split("\n")
   if len(sys.argv) == 3:
     lowerBound = sys.argv[1]
-    upperBound = sys.argv[2] + '~';
+    upperBound = sys.argv[2]
     myList = []
     count = 0
-    for item in CSIDS:
-      if lowerBound <= item <= upperBound:
+    for item in CSIDS :
+      if ord(item[0]) in range(ord(lowerBound), ord(upperBound)+1) :
         if "." not in item :
           myList.append( item )
     for csid in myList :
@@ -46,11 +46,9 @@ def main():
 def assign9( csid , writeToFile) :
   fileToGrade = ""
   late = 0
-  grade = 70
   style = 30
   wrongFileName = False
   header = True
-  comments = " "
 
   os.chdir(csid)
   if writeToFile: outputFile.write(csid + "\t")
@@ -87,6 +85,7 @@ def assign9( csid , writeToFile) :
   perfectScore = 0
   closeScore = 0
   wrongScore = 0
+  grade = 0
   if not fileToGrade == "" and late != -1:
     questionCount = 0
     maxScore = 0
@@ -120,7 +119,7 @@ def assign9( csid , writeToFile) :
         lowerLimit = int(inputValues[inputSet * 2])
         upperLimit = int(inputValues[inputSet * 2 + 1])
 
-      scoreValue = 5
+      scoreValue = 1
       maxScore += scoreValue
       perfectInputRequest = True
       correctValue = getNextCorrectLine(correct)
@@ -138,7 +137,7 @@ def assign9( csid , writeToFile) :
           wrongScore += scoreValue
         print("\tPerfect: '" + correctValue + "'\n\tActual:  '" + answerValue + "'")
 
-      scoreValue = 15
+      scoreValue = 7
       maxScore += scoreValue
       totalAnswers = round((upperLimit - lowerLimit)/2 + 2)
       perfectData = True
@@ -165,7 +164,7 @@ def assign9( csid , writeToFile) :
         else:
           wrongScore += scoreValue
 
-      scoreValue = 5
+      scoreValue = 1
       maxScore += scoreValue
       perfectMaximum = True
       correctValue = getNextCorrectLine(correct)
@@ -192,8 +191,23 @@ def assign9( csid , writeToFile) :
     print("Perfect: " + str(perfectScore) + "/" + str(maxScore))
     print("Close:   " + str(closeScore) + "/" + str(maxScore))
     print("Wrong:   " + str(wrongScore) + "/" + str(maxScore))
+
+    comments = "Output "
     if wrongScore != 0 or closeScore != 0:
-      comments += "Output did not match the instructor's  P: "+str(perfectScore)+"  C: "+str(closeScore)+"  W: "+str(wrongScore)+ ", "
+      comments += "did not match"
+    else:
+      comments += "matched"
+    comments += " the instructor's  Perfect: "+str(perfectScore)+"  Close: "+str(closeScore)+"  Wrong: "+str(wrongScore)+" (Max: "+str(maxScore)+")"
+
+    # now normalize the grade to be out of a maximum of 45
+    maxSubGrade = 45
+    # perfect scores count for the full value
+    grade = perfectScore / float(maxScore) * maxSubGrade
+    # close scores count for 80% of the full value
+    grade += closeScore * 0.8 / float(maxScore) * maxSubGrade
+    # wrong scores...count for nothing :-p
+    # now add an automatic +25 for completing the assignment
+    grade = int(grade) + 25
 
   #checking for header and style
   #os.system('vim ' + fileToGrade)
@@ -216,23 +230,26 @@ def assign9( csid , writeToFile) :
     if writeToFile: outputFile.write('0\t More than 7 days late')
   else :
     if late == 3:
-      comments = "3 - 7 days late, "
+      comments += ", 3 - 7 days late (-30)"
       grade -= 30
     elif late == 2 :
-      comments = "2 days late, "
+      comments += ", 2 days late (-20)"
       grade -= 20
     elif late == 1 :
-      comments = "1 day late, "
+      comments += ", 1 day late (-10)"
       grade -= 10
     
     if wrongFileName :
-      comments += " wrong filename, "
+      comments += ", wrong filename (-10)"
       grade -= 10
     if not header :
-      comments += " no/malformed header, "
+      comments += ", no/malformed header (-10)"
       grade -= 10
 
-    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', '))
+    if grade < 0 :
+      grade = 0
+
+    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments)
       
   if writeToFile: outputFile.write('\n')
   os.chdir("..")

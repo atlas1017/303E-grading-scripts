@@ -142,43 +142,43 @@ def assign10(csid , writeToFile) :
           first_fail = False
           print(string)
 
-      functionality_fail = "Tests failed (Functionality):"
+      functionality_fail = "Tests failed (5 points each):"
       num_off = 0
       if not encrypt_tests[0]:
         print_fail (functionality_fail)
         print("\tEncrypt even length")
-        comments.append("failed encrypt even (-4)")
-        num_off += 4
+        comments.append("failed encrypt even (-5)")
+        num_off += 5
       if not encrypt_tests[1]:
         print_fail (functionality_fail)
         print("\tEncrypt odd length")
-        comments.append("failed encrypt odd (-4)")
-        num_off += 4
+        comments.append("failed encrypt odd (-5)")
+        num_off += 5
       if not encrypt_tests[2]:
         print_fail (functionality_fail)
         print("\tEncrypt multiple lines")
-        comments.append("failed encrypt multi (-4)")
-        num_off += 4
+        comments.append("failed encrypt multi (-5)")
+        num_off += 5
       if not decrypt_tests[0]:
         print_fail (functionality_fail)
         print("\tDecrypt even length")
-        comments.append("failed decrypt even (-4)")
-        num_off += 4
+        comments.append("failed decrypt even (-5)")
+        num_off += 5
       if not decrypt_tests[1]:
         print_fail (functionality_fail)
         print("\tDecrypt odd length")
-        comments.append("failed decrypt odd (-4)")
-        num_off += 4
+        comments.append("failed decrypt odd (-5)")
+        num_off += 5
       if not decrypt_tests[2]:
         print_fail (functionality_fail)
         print("\tDecrypt multiple lines")
-        comments.append("failed decrypt multi (-4)")
-        num_off += 4
+        comments.append("failed decrypt multi (-5)")
+        num_off += 5
       if not format_test:
-        print("Test failed (Robustness):")
+        print_fail (functionality_fail)
         print("\tSTDOUT Formatting")
-        comments.append("incorrect formatting (-3)")
-        num_off += 3
+        comments.append("incorrect formatting (-5)")
+        num_off += 5
       grade -= num_off
       print("Total off: (-%d)" % num_off)
 

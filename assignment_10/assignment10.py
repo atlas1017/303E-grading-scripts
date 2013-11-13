@@ -93,15 +93,19 @@ def assign10(csid , writeToFile) :
   def cp_run_and_diff (stdin_text, file_to_copy, file_correct, stdout_correct):
     os.chdir('..')
     subprocess.getoutput('rm %soutput.txt' % csid)
-    os.system('cp %s %sinput.txt' % (file_to_copy, csid))
+    os.system('cp %s %s/input.txt' % (file_to_copy, csid))
     os.chdir(csid)
     process = subprocess.Popen(['python3', fileToGrade], **pipes)
     stdout_output = str(process.communicate(bytes(stdin_text, 'UTF-8'))[0])[2:-1]
-    differences = subprocess.getoutput('diff output.txt ../%s' % file_correct)
+    differences = subprocess.getoutput('diff -w output.txt ../%s' % file_correct)
+    if differences != '':
+      print("Expected:")
+      [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('../%s' % file_correct, 'r')]
+      print("Actual:")
+      [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('output.txt', 'r')]
+      print()
     os.system('rm output.txt')
     os.system('rm input.txt')
-    print('stdout: """'+stdout_output+'"""')
-    print('diff: """'+differences+'"""')
     return (differences == '', stdout_output == stdout_correct)
 
   if late != -1:
@@ -124,40 +128,54 @@ def assign10(csid , writeToFile) :
       
     if all(encrypt_tests) and all(decrypt_tests) and format_test:
       print("Perfect! ^_^")
-      comments.append("passed all tests (+0)")
+      comments.append("passed all tests")
     elif not (any(encrypt_tests) or any(decrypt_tests) or format_test):
       print("Failed every test... ='(")
       comments.append("failed all tests (-30)")
       grade -= 30
     else:
-      print("Tests failed (Functionality):")
+      first_fail = True
+
+      def print_fail (string):
+        nonlocal first_fail
+        if first_fail:
+          first_fail = False
+          print(string)
+
+      functionality_fail = "Tests failed (Functionality):"
       num_off = 0
       if not encrypt_tests[0]:
+        print_fail (functionality_fail)
         print("\tEncrypt even length")
         comments.append("failed encrypt even (-4)")
         num_off += 4
       if not encrypt_tests[1]:
+        print_fail (functionality_fail)
         print("\tEncrypt odd length")
         comments.append("failed encrypt odd (-4)")
         num_off += 4
       if not encrypt_tests[2]:
+        print_fail (functionality_fail)
         print("\tEncrypt multiple lines")
         comments.append("failed encrypt multi (-4)")
         num_off += 4
       if not decrypt_tests[0]:
+        print_fail (functionality_fail)
         print("\tDecrypt even length")
         comments.append("failed decrypt even (-4)")
         num_off += 4
       if not decrypt_tests[1]:
+        print_fail (functionality_fail)
         print("\tDecrypt odd length")
         comments.append("failed decrypt odd (-4)")
         num_off += 4
       if not decrypt_tests[2]:
+        print_fail (functionality_fail)
         print("\tDecrypt multiple lines")
         comments.append("failed decrypt multi (-4)")
         num_off += 4
-      print("Tests failed (Robustness):")
       if not format_test:
+        print("Test failed (Robustness):")
         print("\tSTDOUT Formatting")
         comments.append("incorrect formatting (-3)")
         num_off += 3
@@ -175,13 +193,14 @@ def assign10(csid , writeToFile) :
     header = False
   style = input("Style/Other (Out of 30, hit enter for 30): ")
   gen_comments = input("General Comments?: ").rstrip().lstrip()
-  gen_comments = gen_comments if len(gen_comments) is not 0 else "looks fine"
-  if not style.isdigit() :
+  gen_comments = gen_comments if len(gen_comments) is not 0 else "style"
+  if not style.isdigit():
     style = 30
   else :
     style = int(style)
-  gen_comments += " (%+d)" % (style - 30)
-  comments.append("%s" % gen_comments)
+  if (gen_comments != "style" or style != 30):
+    gen_comments += " (%+d)" % (style - 30)
+    comments.append("%s" % gen_comments)
   
   #writing grade time!
   if late == -1:

@@ -97,13 +97,18 @@ def assign10(csid , writeToFile) :
     os.chdir(csid)
     process = subprocess.Popen(['python3', fileToGrade], **pipes)
     stdout_output = str(process.communicate(bytes(stdin_text, 'UTF-8'))[0])[2:-1]
-    differences = subprocess.getoutput('diff -w output.txt ../%s' % file_correct)
-    if differences != '':
-      print("Expected:")
-      [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('../%s' % file_correct, 'r')]
-      print("Actual:")
-      [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('output.txt', 'r')]
-      print()
+    try:
+      differences = subprocess.getoutput('diff -w output.txt ../%s' % file_correct)
+      if differences != '':
+        print("Expected:")
+        line = ""
+        [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('../%s' % file_correct, 'r')]
+        print("Actual:")
+        line = ""
+        [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('output.txt', 'r')]
+        print()
+    except:
+      print("Program did not output to file.")
     os.system('rm output.txt')
     os.system('rm input.txt')
     return (differences == '', stdout_output == stdout_correct)

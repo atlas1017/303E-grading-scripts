@@ -97,6 +97,7 @@ def assign10(csid , writeToFile) :
     os.chdir(csid)
     process = subprocess.Popen(['python3', fileToGrade], **pipes)
     stdout_output = str(process.communicate(bytes(stdin_text, 'UTF-8'))[0])[2:-1]
+    print("%s %s" % ("Encrypting" if stdin_text == 'E' else "Decrypting", file_to_copy))
     try:
       differences = subprocess.getoutput('diff -w output.txt ../%s' % file_correct)
       if differences != '':
@@ -107,6 +108,8 @@ def assign10(csid , writeToFile) :
         line = ""
         [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('output.txt', 'r')]
         print()
+      else:
+        print("Outputs match\n")
     except:
       print("Program did not output to file.")
     os.system('rm output.txt')

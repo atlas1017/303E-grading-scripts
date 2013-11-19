@@ -103,17 +103,18 @@ def assign10(csid , writeToFile) :
       if differences != '':
         print("Expected:")
         line = ""
-        [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('../%s' % file_correct, 'r')]
+        [print("\t|%s" % line.strip()) for line in open('../%s' % file_correct, 'r')]
         print("Actual:")
         line = ""
-        [print("\t|%s" % line.strip()) if line.strip() != '' else None for line in open('output.txt', 'r')]
-        print()
+        [print("\t|%s" % line.strip()) for line in open('output.txt', 'r')]
       else:
-        print("Outputs match\n")
+        print("File outputs match")
     except:
       print("Program did not output to file.")
-    os.system('rm output.txt')
-    os.system('rm input.txt')
+    subprocess.getoutput('rm output.txt')
+    subprocess.getoutput('rm input.txt')
+    stdout_output = stdout_output.replace(r'\n', '\n').replace('decrpyt', 'decrypt').strip()
+    print("STDOUT matches\n" if stdout_output == stdout_correct else "STDOUT does not match\n")
     return (differences == '', stdout_output == stdout_correct)
 
   if late != -1:
@@ -123,7 +124,7 @@ def assign10(csid , writeToFile) :
     decrypt_tests = []
     # program formatting (1 test: worth 5 points)
     format_test = True
-    correct_format = r'Do you want to encrypt or decrypt? (E / D): \nOutput written to output.txt\n'
+    correct_format = 'Do you want to encrypt or decrypt? (E / D): \nOutput written to output.txt'
 
     for decrypted, encrypted in zip (files_to_encrypt, files_to_decrypt):
       (correctness, format_test1) = cp_run_and_diff ('E', decrypted, encrypted, correct_format)

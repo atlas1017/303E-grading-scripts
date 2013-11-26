@@ -113,8 +113,8 @@ def assign10(csid , writeToFile) :
       print("Program did not output to file.")
     subprocess.getoutput('rm output.txt')
     subprocess.getoutput('rm input.txt')
-    stdout_output = stdout_output.replace(r'\n', '\n').replace('decrpyt', 'decrypt').strip()
-    print("STDOUT matches\n" if stdout_output == stdout_correct else "STDOUT does not match\n")
+    stdout_output = '\n'.join([line if line.count(' ') != len(line) else '\n' for line in stdout_output.replace(r'\n', '\n').replace('decrpyt', 'decrypt').strip().split('\n')])
+    print("STDOUT matches\n" if stdout_output == stdout_correct else "STDOUT does not match:\n%s\n" % stdout_output)
     return (differences == '', stdout_output == stdout_correct)
 
   if late != -1:

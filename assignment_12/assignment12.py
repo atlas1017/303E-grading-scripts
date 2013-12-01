@@ -92,22 +92,21 @@ def assign12(csid , writeToFile) :
     os.chdir('..')
     os.system('cp %s %s/isbn.txt' % (input_file, csid))
     os.chdir(csid)
-    print (os.getcwd() )
     command = 'python3 ' + fileToGrade
     os.system( command )
     wrongCases = testCases
     try:
       user_file = open(output_file, 'r')
-      user_line = user_file.readline()
+      user_line = user_file.readline().lower()
       std_file = open('../%s' % output_file, 'r')
-      std_line = std_file.readline()
+      std_line = std_file.readline().lower()
       
       while (std_line and user_line ):
         print ("Expected: ", std_line, end='')
         print ("Actual:   ", user_line)
         if std_line.split() == user_line.split():
           wrongCases -= 1
-        elif std_line.split()[1].lower() in user_line.split().lower():
+        elif std_line.split()[1] in user_line.split():
           wrongCases -= 0.5
         user_line = user_file.readline()
         std_line = std_file.readline()
@@ -128,13 +127,13 @@ def assign12(csid , writeToFile) :
 
   if late != -1:
     wrongTests = run_program_compare()
+    print ("correct: ", testCases - wrongTests)
+    print ("wrong:   ", wrongTests)
     if wrongTests == 0:
       print("Excellent! passed all tests")
       comments.append("passed all tests")
     else:
       grade = grade - (30/testCases) * wrongTests
-      print ("correct: ", testCases - wrongTests)
-      print ("wrong:   ", wrongTests)
       c = str(wrongTests) + " are wrong"
       comments.append(c)
 

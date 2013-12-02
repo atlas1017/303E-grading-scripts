@@ -95,26 +95,31 @@ def assign12(csid , writeToFile) :
     command = 'python3 ' + fileToGrade
     os.system( command )
     wrongCases = testCases
+    count = 1
     try:
       user_file = open(output_file, 'r')
-      user_line = user_file.readline().lower()
+      user_line = user_file.readline()
       std_file = open('../%s' % output_file, 'r')
-      std_line = std_file.readline().lower()
+      std_line = std_file.readline()
       
       while (std_line and user_line ):
+        print ("test case", count)
         print ("Expected: ", std_line, end='')
         print ("Actual:   ", user_line)
-        if std_line.split() == user_line.split():
+        count += 1
+        if std_line.lower().split() == user_line.lower().split():
           wrongCases -= 1
-        elif std_line.split()[1] in user_line.split():
+        elif std_line.lower().split()[1] in user_line.lower().split():
           wrongCases -= 0.5
         user_line = user_file.readline()
         std_line = std_file.readline()
 
       while(std_line):
+          print ("test case", count)
           print ("Expected: ", std_line, end='')
           print ("Actual:   ")
           user_line = user_line.readline()
+          count += 1
       while(user_line):
           wrongCases += 1
           print ("Expected: ", end='')

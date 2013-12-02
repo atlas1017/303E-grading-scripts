@@ -14,7 +14,7 @@ outputFile = open(outputFilename, 'a')
 filename = "ISBN.py"
 input_file = 'isbn.txt' 
 output_file = 'isbnOut.txt'
-testCases = 5
+testCases = 10
 dateString = "11-11-2013 23:59:59"
 
 def main():

@@ -1,0 +1,22 @@
+14 14
+
+H E L L O X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X W O R L D X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X T E S T I N G
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+H O R I Z O N T A L X X X X
+X X X X X X X X X X X X X X
+
+4
+TESTING
+HORIZONTAL
+HELLO
+WORLD

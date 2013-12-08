@@ -1,0 +1,22 @@
+14 14
+
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X S D R A W K C A B X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X L X X X
+X X X T S U M X X X A X X X
+X X X X X X X X X X C X X X
+X X X X X X X X X X I X X X
+X X X X X X X X X X T X X X
+X X X S S A P X X X R X X X
+X X X X X X X X X X E X X X
+X X X X X X X X X X V X X X
+X X X X X X X X X X X X X X
+
+4
+BACKWARDS
+MUST
+PASS
+VERTICAL

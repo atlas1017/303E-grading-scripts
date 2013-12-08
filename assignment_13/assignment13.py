@@ -17,6 +17,7 @@ filename = 'WordSearch.py'
 file_names = ('horizontal', 'vertical', 'backwards', 'non_square', 'not_found')
 # Worth 10 bonus points
 bonus_name = 'diagonal'
+
 dateString = "11-15-2013 23:59:59"
 dateString = "12-7-2013 23:59:59"
 
@@ -93,7 +94,9 @@ def assign13(csid , writeToFile) :
 
   # copies ../FILE_TO_COPY.txt to ./hidden.txt and runs the program in ./
   # diffs ./found.txt with ../FILE_TO_COPY_found.txt
+  perfect_formatting = True
   def cp_run_and_diff (file_to_copy):
+    nonlocal perfect_formatting
     os.chdir ('..')
     subprocess.getoutput('rm %s/hidden.txt' % csid)
     subprocess.getoutput('rm %s/found.txt' % csid)
@@ -111,12 +114,18 @@ def assign13(csid , writeToFile) :
         expected_lines.sort()
         if (len(actual_lines) != len(expected_lines)):
           success = False
+          if (file_to_copy == file_names[0]):
+            perfect_formatting = False
         else:
+          last_line = None
           for expected_line, actual_line in zip(expected_lines, actual_lines):
             if not success:
               break
+            if file_to_copy == file_names[0] and last_line is not None:
+              perfect_formatting = perfect_formatting and len(last_line) == len(actual_line)
+            last_line = actual_line
             success = expected_line.split() == actual_line.split()
-        if not success and file_to_copy != bonus_name:
+        if True or not success and file_to_copy != bonus_name:
           print ('  Expected:')
           for line in expected_lines:
             print ('    |%s' % line)
@@ -126,11 +135,13 @@ def assign13(csid , writeToFile) :
           print()
         elif success:
           if file_to_copy == bonus_name:
-            print ("Testing %s:" % file_to_copy)
+            print ("Testing '%s':" % file_to_copy)
           print ('Program output matches exactly!\n')
     except:
       if file_to_copy != bonus_name:
         print ("Program did not output to file.\n")
+      if (file_to_copy == file_names[0]):
+        perfect_formatting = False
       return False
 
     subprocess.getoutput('rm hidden.txt')
@@ -144,9 +155,13 @@ def assign13(csid , writeToFile) :
     test_results.append (cp_run_and_diff (bonus_name))
     
     if test_results[-1]:
-      print("Bonus implemented correctly! (+10)")
+      print("Bonus: Diagonal searching implemented correctly! (+10)\n")
       comments.append("passed diagonal bonus (+10)")
       grade += 10
+    if perfect_formatting:
+      print("Bonus: formatting is perfect! (+5)\n")
+      comments.append("passed formatting bonus (+5)")
+      grade += 5
     if all(test_results[:-1]):
       print("Perfect! ^_^")
       comments.append("passed all tests")

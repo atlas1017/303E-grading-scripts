@@ -100,35 +100,38 @@ def assign13(csid , writeToFile) :
     os.system('cp %s.txt %s/hidden.txt' % (file_to_copy, csid))
     os.chdir(csid)
     subprocess.getoutput('python3 %s' % fileToGrade)
-    print ("Testing %s:" % file_to_copy)
+    if file_to_copy != bonus_name:
+      print ("Testing %s:" % file_to_copy)
     success = True
     try:
       with open ('found.txt', 'r') as actual, open ('../%s_found.txt' % file_to_copy, 'r') as expected:
-        for expected_line in expected:
-          if not success:
-            break
-          expected_line = expected_line.strip().split()
-          actual_line = actual.readline().strip()
-          while actual_line == '':
-            actual_line = actual.readline().strip()
-          if actual_line == None or expected_line != actual_line.split():
-            success = False
+        actual_lines = [x.strip() for x in list(actual) if len(x.strip()) != 0]
+        actual_lines.sort()
+        expected_lines = [x.strip() for x in list(expected) if len(x.strip()) != 0]
+        expected_lines.sort()
+        if (len(actual_lines) != len(expected_lines)):
+          success = False
+        else:
+          for expected_line, actual_line in zip(expected_lines, actual_lines):
+            if not success:
+              break
+            success = expected_line.split() == actual_line.split()
+        if not success and file_to_copy != bonus_name:
+          print ('  Expected:')
+          for line in expected_lines:
+            print ('    |%s' % line)
+          print ('  Actual:')
+          for line in actual_lines:
+            print ('    |%s' % line)
+          print()
+        elif success:
+          if file_to_copy == bonus_name:
+            print ("Testing %s:" % file_to_copy)
+          print ('Program output matches exactly!\n')
     except:
-      print ("Program did not output to file.\n")
+      if file_to_copy != bonus_name:
+        print ("Program did not output to file.\n")
       return False
-
-    if not success:
-      print ('Expected:')
-      with open ('../%s_found.txt' % file_to_copy, 'r') as file_in:
-        for line in file_in:
-          print ("  |%s" % line.strip())
-      print ('Actual:')
-      with open ('found.txt', 'r') as file_in:
-        for line in file_in:
-          print ("  |%s" % line.strip())
-      print ("\n")
-    else:
-      print ("Program output matches exactly!\n")
 
     subprocess.getoutput('rm hidden.txt')
     subprocess.getoutput('rm found.txt')

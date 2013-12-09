@@ -1,0 +1,33 @@
+20 25
+
+D X X X X X X X X X X X X X X X X X X X X X X X X
+X I X X X X X X X X X X X X X X X X X X X X X X X
+X X A X X X X X X X X X X X X X X X X X X X X X X
+X X X G X X X X X X X X X X X X X X X X X X X X X
+X X X X O X X X X X X X X X X X X X X X X X X X X
+X X X X X N X X X X X X X X X X X X T X X X X X X
+X X X X X X A X X X X X X X X X X E X X X X X X X
+X X X X X X X L X X X X X X X X S X X X X X X X X
+X X X X X X X X X X X X X X X T X X X X X X X X X
+X X X X X X X X X X X X X X I X X X X X X X X X X
+X X X X S X X X X X X X X N X X X X X X X X X X X
+X X X X X U X X X X X X G X X X X X X X X X X X X
+X X X X X X N X X X X X X X X X X X X X B X X X X
+X X X X X X X O X X X X X X X X X X X X A X X X S
+X X X X X X X X B X X X R X X X X X X X S X X X T
+X X X X X X X X X X X O X X X X X X X X E X X X S
+X X X X X X X X X X F X X X X X X X X X X X X X E
+X X X X X X X X X X X X X X X X X X X X X X X X T
+X X X M U S T X X X X X X X X X X X X X X X X X X
+X X X X X X X X S S A P X X X X X X X X X X X X X
+
+8
+
+DIAGONAL
+TESTING
+FOR
+BONUS
+MUST
+PASS
+BASE
+TESTS

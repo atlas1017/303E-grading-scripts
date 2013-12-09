@@ -1,0 +1,22 @@
+14 14
+
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X C L O S X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X N X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X U B X X X X C X X
+X X X X X X X X X X X I X X
+X X X X X X X X X X X G X X
+X X X X X X X X X X X A X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+X X X X X X X X X X X X X X
+
+4
+CLOSE
+BUT
+NO
+CIGAR

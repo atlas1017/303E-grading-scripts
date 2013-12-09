@@ -158,7 +158,7 @@ def assign13(csid , writeToFile) :
       print("Bonus: Diagonal searching implemented correctly! (+10)\n")
       comments.append("passed diagonal bonus (+10)")
       grade += 10
-    if perfect_formatting:
+    if perfect_formatting and any(test_results[:-2]):
       print("Bonus: formatting is perfect! (+5)\n")
       comments.append("passed formatting bonus (+5)")
       grade += 5

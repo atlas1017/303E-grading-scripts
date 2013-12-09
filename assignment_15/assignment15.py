@@ -118,11 +118,19 @@ def assign15(csid , writeToFile) :
 
     #check correctness
     if len(correct) == len(answer):
+      count = 0
       for right,theirs in zip(correct,answer):
+        count+=1
+        if count == 1:
+          continue
         for rightElem, theirsElem in zip(right,theirs):
           if rightElem != theirsElem and (rightElem not in theirsElem and theirsElem not in rightElem):
-            rightFloat = eval(rightElem)
-            theirsFloat = eval(theirsElem)
+            try:
+              rightFloat = eval(rightElem)
+              theirsFloat = eval(theirsElem)
+            except Exception:
+              rightFloat = ""
+              theirsFloat = ""
             #SOOOOO MUCH COPY PASTA!!!! DON'T EVEN CAR IT WORKS!!!
             #YES CAR!!!!
             if type(rightFloat) == type(0.0) and type(theirsFloat) == type(0.0):

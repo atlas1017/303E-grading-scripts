@@ -94,13 +94,14 @@ def assign2( csid , writeToFile) :
     closeCount = 0
     wrongCount = 0
     VISA_answers = [0, 1, 2, 3]
-    MasterCard_answers = [4]
+    MasterCard_answers = [4, 5]
     correct_VISA_count = 0
     correct_MasterCard_count = 0
     # Used to ensure the inverse of the right answer is not also in the output.
     inverse = {'Valid credit card number': 'Invalid credit card number',
                'Invalid credit card number': 'Valid credit card number'}
-    for answerCount, correctAnswer in enumerate(correct.splitlines()):
+    correct_answers = correct.splitlines()
+    for answerCount, correctAnswer in enumerate(correct_answers):
       answer = answers[answerCount]
       # Contains the correct formatted answer.
       if correctAnswer in answer and not inverse[correctAnswer] in answer:  
@@ -120,12 +121,12 @@ def assign2( csid , writeToFile) :
       else:
         print("Wrong answer for #", answerCount+1)
         wrongCount += 1
-    print("Perfect:", str(perfectCount) + "/9")
-    print("Close:", str(closeCount) + "/9")
-    print("Wrong:", str(wrongCount) + "/9")
+    print("Perfect:", str(perfectCount) + "/" + str(len(correct_answers)))
+    print("Close:", str(closeCount) + "/" + str(len(correct_answers)))
+    print("Wrong:", str(wrongCount) + "/" + str(len(correct_answers)))
     print("Correct VISA:", str(correct_VISA_count) + "/" + str(len(VISA_answers)))
     print("Correct MasterCard:", str(correct_MasterCard_count) + "/" + str(len(MasterCard_answers)))
-    grade = 70 - (4 * wrongCount) 
+    grade = 70 - (5 * wrongCount) 
     if(1 <= closeCount <= 4):
       grade -= 5
       comments += " Output did not match instructor's, "

@@ -44,7 +44,6 @@ def main():
 def assign2( csid , writeToFile) :
   fileToGrade = ""
   late = 0
-  linesWrong = 0
   grade = 70
   style = 30
   wrongFileName = False
@@ -75,7 +74,7 @@ def assign2( csid , writeToFile) :
     fileToGrade = input("Which file should I grade? ")
     if fileToGrade == "" :
       if writeToFile: 
-        outputFile.write("0\tno file")
+        outputFile.write("0\tno file\n")
         os.chdir("..")
         return
     else :
@@ -92,36 +91,55 @@ def assign2( csid , writeToFile) :
       answers.append(str(out)[2:-1])
      
     perfectCount = 0
-    closeCount = 0 
-    answerCount = 0
+    closeCount = 0
     wrongCount = 0
-    for correctAnswer in correct.splitlines():
-      if correctAnswer in answers[answerCount]:  #Does not contain the correct formatted answer
+    VISA_answers = [0, 1, 2, 3]
+    MasterCard_answers = [4]
+    correct_VISA_count = 0
+    correct_MasterCard_count = 0
+    # Used to ensure the inverse of the right answer is not also in the output.
+    inverse = {'Valid credit card number': 'Invalid credit card number',
+               'Invalid credit card number': 'Valid credit card number'}
+    for answerCount, correctAnswer in enumerate(correct.splitlines()):
+      answer = answers[answerCount]
+      # Contains the correct formatted answer.
+      if correctAnswer in answer and not inverse[correctAnswer] in answer:  
         print('Correct answer for #', answerCount+1)
         perfectCount += 1
+        # If the card number is a VISA, check if they did extra credit.
+        if answerCount in VISA_answers and '\nVISA' in answer:
+            correct_VISA_count += 1
+        # If the card number is a MasterCard, check if they did extra credit.
+        if answerCount in VISA_answers and '\nMasterCard' in answer:
+            correct_MasterCard_count += 1
+      # Contains right answer, but not correctly formatted.
+      elif correctAnswer.lower()[0:5] in answer.lower() and not inverse[correctAnswer].lower()[0:5] in answer.lower():
+        print ("Correct answer for #", answerCount+1," but incorrect formatting")
+        print ("\t", correctAnswer[0:1],"-",answer)
+        closeCount += 1
       else:
-        if correctAnswer.lower()[0:5] in answers[answerCount].lower() and not "in" + correctAnswer.lower()[0:5] in answers[answerCount].lower(): #We can change to to account for invalid or not
-          print ("Correct answer for #", answerCount+1," but incorrect formatting")
-          print ("\t", correctAnswer[0:1],"-",answers[answerCount])
-          closeCount += 1
-        else:
-          print("Wrong answer")
-          wrongCount += 1
-      answerCount += 1
+        print("Wrong answer for #", answerCount+1)
+        wrongCount += 1
     print("Perfect:", str(perfectCount) + "/8")
     print("Close:", str(closeCount) + "/8")
     print("Wrong:", str(wrongCount) + "/8")
-    if(0 >= closeCount >= 4):
-    	grade = 70 - (4 * wrongCount) 
-    	comments += " Output did not match instructors, "
-    elif(closeCount >= 4):
-    	grade = 60 - (4 * wrongCount)
-    	comments += " Output did not match instructors, "
+    print("Correct VISA:", str(correct_VISA_count) + "/" + str(len(VISA_answers)))
+    print("Correct MasterCard:", str(correct_MasterCard_count) + "/" + str(len(MasterCard_answers)))
+    grade = 70 - (4 * wrongCount) 
+    if(1 <= closeCount <= 4):
+      grade -= 5
+      comments += " Output did not match instructor's, "
+    elif(closeCount > 4):
+      grade = -= 10
+      comments += " Output did not match instructor's, "
+    # Add points for extra credit - 5 if all correct, 3 if some.
+    if correct_VISA_count == len(VISA_answers) and correct_MasterCard_count == len(MasterCard_answers):
+      grade += 5
+    elif correct_VISA_count > 0 or correct_MasterCard_count > 0:
+      grade += 3
 
-      #TODO take of 5 points if they're closeCount is 0 to 4 and take off 10 if closeCount is greater than 4
-      #TODO take off 4 * wrongCount points as well
-      #TODO fix the else below to output the correct comments
-     
+
+  #TODO fix the else below to output the correct comments   
   else:
     #print('Their output:')
     #print(out)
@@ -169,13 +187,6 @@ def assign2( csid , writeToFile) :
     if not header :
       comments += " no/malformed header, "
       grade -= 10
-
-    if linesWrong > 0 and linesWrong < 3 : 
-      comments += "improperly formed superman logo, "
-      grade -= 5
-    elif linesWrong > 3 :
-      comments += "nonsensical superman logo, "
-      grade -= 5
     if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', ') + manualComments)
       
   if writeToFile: outputFile.write('\n')

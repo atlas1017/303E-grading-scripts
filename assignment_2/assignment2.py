@@ -108,10 +108,10 @@ def assign2( csid , writeToFile) :
         print('Correct answer for #', answerCount+1)
         perfectCount += 1
         # If the card number is a VISA, check if they did extra credit.
-        if answerCount in VISA_answers and '\\nVISA' in answer:
+        if answerCount in VISA_answers and '\\nVISA\\n' in answer:
             correct_VISA_count += 1
         # If the card number is a MasterCard, check if they did extra credit.
-        if answerCount in MasterCard_answers and '\\nMasterCard' in answer:
+        if answerCount in MasterCard_answers and '\\nMasterCard\\n' in answer:
             correct_MasterCard_count += 1
       # Contains right answer, but not correctly formatted.
       elif correctAnswer.lower()[0:5] in answer.lower() and not inverse[correctAnswer].lower()[0:5] in answer.lower():

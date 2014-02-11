@@ -107,10 +107,10 @@ def assign2( csid , writeToFile) :
         print('Correct answer for #', answerCount+1)
         perfectCount += 1
         # If the card number is a VISA, check if they did extra credit.
-        if answerCount in VISA_answers and '\nVISA' in answer:
+        if answerCount in VISA_answers and '\\nVISA' in answer:
             correct_VISA_count += 1
         # If the card number is a MasterCard, check if they did extra credit.
-        if answerCount in VISA_answers and '\nMasterCard' in answer:
+        if answerCount in MasterCard_answers and '\\nMasterCard' in answer:
             correct_MasterCard_count += 1
       # Contains right answer, but not correctly formatted.
       elif correctAnswer.lower()[0:5] in answer.lower() and not inverse[correctAnswer].lower()[0:5] in answer.lower():
@@ -120,9 +120,9 @@ def assign2( csid , writeToFile) :
       else:
         print("Wrong answer for #", answerCount+1)
         wrongCount += 1
-    print("Perfect:", str(perfectCount) + "/8")
-    print("Close:", str(closeCount) + "/8")
-    print("Wrong:", str(wrongCount) + "/8")
+    print("Perfect:", str(perfectCount) + "/9")
+    print("Close:", str(closeCount) + "/9")
+    print("Wrong:", str(wrongCount) + "/9")
     print("Correct VISA:", str(correct_VISA_count) + "/" + str(len(VISA_answers)))
     print("Correct MasterCard:", str(correct_MasterCard_count) + "/" + str(len(MasterCard_answers)))
     grade = 70 - (4 * wrongCount) 
@@ -130,7 +130,7 @@ def assign2( csid , writeToFile) :
       grade -= 5
       comments += " Output did not match instructor's, "
     elif(closeCount > 4):
-      grade = -= 10
+      grade -= 10
       comments += " Output did not match instructor's, "
     # Add points for extra credit - 5 if all correct, 3 if some.
     if correct_VISA_count == len(VISA_answers) and correct_MasterCard_count == len(MasterCard_answers):

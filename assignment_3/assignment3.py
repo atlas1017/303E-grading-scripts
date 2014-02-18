@@ -10,7 +10,7 @@ outputFilename = 'assignment3.txt'
 outputFile = open(outputFilename, 'w+')
 outputFile.write('CSID\tGrade\tComments\n')
 filename = "EasterSunday.py"
-dateString = "09-27-2013 23:00:00"
+dateString = "02-10-2014 23:00:00"
 inputArray = open('input.txt','r').read().split()
 
 def main():
@@ -166,7 +166,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

@@ -83,7 +83,7 @@ def assign4( csid , writeToFile) :
       wrongFileName = True
 
   #grading time!
-  if not fileToGrade == "" and late < 3:
+  if not fileToGrade == "":
     answers = []
     for x in range(0,len(inputArray),3):
       process = subprocess.Popen(['python3', fileToGrade], stdin = subprocess.PIPE, stdout = subprocess.PIPE)
@@ -115,7 +115,7 @@ def assign4( csid , writeToFile) :
     if wrongCount != 0 or closeCount != 0:
         grade -= (2 * wrongCount) 
         grade -= (1 * closeCount)
-        comments += "Output did not match instructor's. "
+        comments += " Output did not match instructor's. "
 
 
   #checking for header and style
@@ -136,26 +136,26 @@ def assign4( csid , writeToFile) :
     if writeToFile: outputFile.write('0\t More than 7 days late')
   else :
     if late == 3:
-      comments = "3 - 7 days late, "
+      comments += " 3 - 7 days late."
       grade -= 30
     elif late == 2 :
-      comments = "2 days late, "
+      comments += " 2 days late."
       grade -= 20
     elif late == 1 :
-      comments = "1 day late, "
+      comments += " 1 day late."
       grade -= 10
     
     if wrongFileName :
-      comments += "Wrong filename. "
+      comments += " Wrong filename. "
       grade -= 10
     if header  == 'n':
-      comments += "You need a header at the top of your code. "
+      comments += " You need a header at the top of your code. "
       grade -= 10
     elif header  == 'd':
-      comments += "The description in your header should briefly explain what the program does. "
+      comments += " The description in your header should briefly explain what the program does. "
       grade -= 2
 
-    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', '))
+    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments)
       
   if writeToFile: outputFile.write('\n')
   os.chdir("..")

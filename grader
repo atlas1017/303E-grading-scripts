@@ -1,0 +1,592 @@
+#!/bin/bash
+
+# This script will unzip all files into one a new TurninCS303E directory
+# (if it already exists, it will be deleted). It will then re-label the
+# directories by last name, and remove all directores not assigned to
+# the given grading number (parameter). Finally, it will go through each
+# directory and only keep relevant files (as specified by user).
+#
+# Use:
+#   $ ./grader <num> [file1, file2, ...]
+#
+# Q: Why is this in bash?
+# A: Don't ask...
+
+
+
+DIRECTORY="./TurninCS303E"
+NUM_GRADERS=5
+
+
+
+declare -A students
+
+# CS 53465 (afternoon) - sorted by name
+students+=( ["aahmad"]="Ahmad, Abdelrazaq Jibrael" )
+students+=( ["reshmaa"]="Ahuja, Reshma" )
+students+=( ["ra28752"]="Akaike, Rui" )
+students+=( ["ha5722"]="Alexander, Haley Anne" )
+students+=( ["ka8438"]="Ali Bhai, Kiran" )
+students+=( ["gianp21"]="Alvarado, Gianpierre" )
+students+=( ["aamatong"]="Amatong, Alberto H Lii" )
+students+=( ["micahasa"]="Asadi, Micah Manah" )
+students+=( ["bartram"]="Bartram, Nicholas A" )
+students+=( ["mbaum"]="Baumgartner, Michael Evan" )
+students+=( ["sjb2867"]="Beghtol, Spencer James" )
+students+=( ["pdhamid"]="Bhamidipati, Pranav S" )
+students+=( ["erblack"]="Black, Ethan Ross" )
+students+=( ["chance12"]="Bryant, Chancellor Boyd" )
+students+=( ["rohail"]="Buns, Rohail" )
+students+=( ["gabrielc"]="Cabrera, Gabriel Angel" )
+students+=( ["hcall"]="Call, Hayley" )
+students+=( ["jmc6537"]="Campbell, Joseph Michael" )
+students+=( ["mark"]="Carrion, Mark Andrew" )
+students+=( ["emilcav"]="Cavazos, Emil Manuel" )
+students+=( ["selena13"]="Cepeda, Selena" )
+students+=( ["jac9413"]="Chaffin, Joseph Anthony" )
+students+=( ["kc27528"]="Chan, Kristeen" )
+students+=( ["rscharle"]="Charles, Ricky Shawn" )
+students+=( ["foves"]="Chasmawala, Taariq M" )
+students+=( ["chencj"]="Chen, Chun Jung" )
+students+=( ["jason022"]="Chen, I Sheng Jason" )
+students+=( ["yc8556"]="Cho, Young Min" )
+students+=( ["jashvc"]="Choraria, Jash Vijay" )
+students+=( ["mkcope7"]="Cope, Mary Elise Kincy" )
+students+=( ["rc37495"]="Cortez, Raymundo" )
+students+=( ["kic269"]="Costin, Kurn Ian" )
+students+=( ["cec2724"]="Cranford, Caroline Elise" )
+students+=( ["dsc986"]="Croy, Daniel Stuart" )
+students+=( ["liza67"]="Didyk, Elizabeth Rachel" )
+students+=( ["kmd2559"]="Dillman, Karen Michelle" )
+students+=( ["pd6494"]="Dochibhotla, Priyanka" )
+students+=( ["saramcd"]="Dunn, Sarah Maria" )
+students+=( ["tdunn"]="Dunn, Thomas William Jr" )
+students+=( ["mduong05"]="Duong, Michelle My Tu" )
+students+=( ["cke265"]="Eason, Christen Kathleen" )
+students+=( ["joshe"]="Edwards, Joshua Franklin" )
+students+=( ["jtf764"]="Fleming, Joshua Tyler Ray" )
+students+=( ["chelseaf"]="Fox, Chelsea Anna" )
+students+=( ["afreese"]="Freese, Avery David" )
+students+=( ["gracie08"]="Frias, Gracie" )
+students+=( ["hannahf"]="Frossard, Hannah C" )
+students+=( ["zjf88"]="Fugina, Zachary Joseph" )
+students+=( ["mg45632"]="Gaba, Mayank" )
+students+=( ["drew701"]="Garcia, Andrew" )
+students+=( ["oagg9212"]="Garcia, Omar Alejandro" )
+students+=( ["rlndgg"]="Garcia, Rolando" )
+students+=( ["jgemkow"]="Gemkow, John Charles" )
+students+=( ["jlg4634"]="Griffin, Jessica Loren" )
+students+=( ["hog74"]="Gutierrez Rivas, H O" )
+students+=( ["yh6728"]="Hahn, Yeon Woo" )
+students+=( ["bhale679"]="Hale, Bradley Curtis" )
+students+=( ["khalidha"]="Hamza, Khalid Fawzi" )
+students+=( ["nicole27"]="Hanlon, Nicole Ashley" )
+students+=( ["maxhealy"]="Healy, Maxwell Alan" )
+students+=( ["ransom"]="Hefley, Ransom Kale" )
+students+=( ["michaelh"]="Hershmann, Michael J" )
+students+=( ["austinh"]="Higgins, Austin Hunter" )
+students+=( ["robbiejh"]="Hinojosa, Robert Joshua" )
+students+=( ["loraineh"]="Hoane, Loraine Elizabeth" )
+students+=( ["fh4255"]="Hossain, Fariha" )
+students+=( ["michael2"]="Hsieh, Michael Yuan Hao" )
+students+=( ["samantha"]="Huang, Samantha Mansha" )
+students+=( ["huangty"]="Huang, Tien Yu" )
+students+=( ["natmhud"]="Hudson, Natasha Marie" )
+students+=( ["ehunker"]="Hunker, Emily Claire" )
+students+=( ["raindrop"]="Huynh, Richard Ly" )
+students+=( ["loyce"]="James, Loyce Gayo" )
+students+=( ["dohee2m"]="Jung, Dohee" )
+students+=( ["gaeunee"]="Jung, Ga Eun" )
+students+=( ["kkamin"]="Kamin, Kelsi Tara" )
+students+=( ["bak792"]="Kappel, Blake Austin" )
+students+=( ["kellyok"]="Karl, Kelly 0" )
+students+=( ["kzkatzen"]="Katzen, Kyle Z" )
+students+=( ["alikazmi"]="Kazmi, Ali Haider" )
+students+=( ["torikaz"]="Kazmierski, Victoria C" )
+students+=( ["kearsley"]="Kearsley, Matthew Forrest" )
+students+=( ["aliciaik"]="Kaittinat, Alicia Isabel" )
+students+=( ["lyk78"]="Kim, Lianne Youngeun" )
+students+=( ["captaein"]="Kim, Tae In" )
+students+=( ["tk7879"]="Kim, Tiffany" )
+students+=( ["ayaka"]="Ko, Ayaka" )
+students+=( ["gewk841"]="Kreitman, Garrett Lloyd" )
+students+=( ["ak25287"]="Kubis, Allison Paige" )
+students+=( ["jairusjl"]="Lamn, Jairus Jonathan" )
+students+=( ["cl34768"]="Lee, Chan Youl" )
+students+=( ["karenlee"]="Lee, Karen Wanju" )
+students+=( ["vlennon"]="Lennon, Virginia Adele" )
+students+=( ["cl34769"]="Lui, Chris" )
+students+=( ["thomasj"]="Lockwood, Thomas J Jr" )
+students+=( ["megan6"]="Logan, Megan Nicole" )
+students+=( ["rluck419"]="Luckfield, Robert Allen" )
+students+=( ["vftb"]="Martella, Jacon Andrew" )
+students+=( ["chuckm99"]="Martinez, Charles Michael" )
+students+=( ["mld2974"]="Masterson, Madison Lynn" )
+students+=( ["pdm669"]="Mcgurk, Patrick Dooling" )
+students+=( ["rupalmeh"]="Mehta, Rupal" )
+students+=( ["lmkergue"]="Mejia, Lucas" )
+students+=( ["scm2595"]="Meyer, Sarah Constance" )
+students+=( ["shotable"]="Miller, Cameron C" )
+students+=( ["gmiller"]="Miller, Gray Thomas" )
+students+=( ["shayanjm"]="Mohanty, Shayan Jayant" )
+students+=( ["slm3336"]="Moji, Seata Lyanda" )
+students+=( ["regal"]="Morales, Regal James" )
+students+=( ["shupez92"]="Morell, Faolain Suzanne" )
+students+=( ["cmorency"]="Morency, Claudia Cathleen" )
+students+=( ["inm235"]="Moser, Ian Michael" )
+students+=( ["djm3225"]="Myers, Dennis James Li" )
+students+=( ["emmanady"]="Nady, Emma Rose" )
+students+=( ["zahran"]="Najmi, Zahra Ali" )
+students+=( ["en3643"]="Nam, Eric" )
+students+=( ["deeptin"]="Nathan, Deepti V" )
+students+=( ["navacaty"]="Nava, Caty" )
+students+=( ["qan74"]="Nguyen, Quan Anh" )
+students+=( ["thomasvn"]="Nguyen, Thomas Vu" )
+students+=( ["tan549"]="Nguyen, Tony Anh" )
+students+=( ["chriswn"]="Noriega, Christopher W" )
+students+=( ["rn6432"]="Norton, Ryan Alexander" )
+students+=( ["ijo76"]="Ovalle, Ignacio Javier" )
+students+=( ["akhilesh"]="Padhe, Akhilesh Ajay" )
+students+=( ["angel"]="Pang, Xiaoshuang" )
+students+=( ["vparam"]="Parameswaran, Varun R" )
+students+=( ["crp2332"]="Patel, Chirag Raj" )
+students+=( ["apearce"]="Pearce, Alexander Inoue" )
+students+=( ["ptravis"]="Pham, Travis Viet" )
+students+=( ["anp2222"]="Phan, Ana Nguyen" )
+students+=( ["wpipkin"]="Pipkin, William Conrad" )
+students+=( ["alexrais"]="Raisch, Alexander Niver" )
+students+=( ["kavi93"]="Rajagopal, Kavitha" )
+students+=( ["oramos"]="Ramos, Orlando Ismael" )
+students+=( ["felixrub"]="Rubio, Felixnando Jr" )
+students+=( ["wryman"]="Ryman, William Randy" )
+students+=( ["lyndsey"]="Sandow, Lyndsey Paige" )
+students+=( ["schluck"]="Schluckerbier, David W" )
+students+=( ["davidben"]="Senthavisouk, David Ben" )
+students+=( ["benjam02"]="Shaw, Benjamin Tyler" )
+students+=( ["shuklavi"]="Shukla, Vinayak" )
+students+=( ["silveyra"]="Silveyra, Mauricio" )
+students+=( ["esimmons"]="Simmons, Eric Jeffrey" )
+students+=( ["happysi"]="Situ, Happy Yilan" )
+students+=( ["rsnavely"]="Snavely, Rachel Anne" )
+students+=( ["rsolloa"]="Solloa, Rodrigo" )
+students+=( ["cms5252"]="Soodi, Catherine Mojdeh" )
+students+=( ["louell"]="Sumaylo, Loell Vinalon" )
+students+=( ["anisha92"]="Sutaria, Anisha Jasmat" )
+students+=( ["mswanson"]="Swanson, Marquis Darrel" )
+students+=( ["attila"]="Szabo, Attila Janos" )
+students+=( ["edt449"]="Ting, Ervin Daniel" )
+students+=( ["dtorres"]="Torres, Diego Alejandro" )
+students+=( ["st24872"]="Trejo, Sam Benjamin" )
+students+=( ["josepht"]="Trevino, Joseph Patrick" )
+students+=( ["pt6235"]="Trieu, Phillip" )
+students+=( ["hoaitru"]="Truong, Hoaihuong Ha" )
+students+=( ["ctu95"]="Tu, Chia Lin Catherine" )
+students+=( ["esv269"]="Van Niman, Edward Stephen" )
+students+=( ["kmv627"]="Vanderlaan, Kaitlin Marie" )
+students+=( ["averner7"]="Verner, Alexander Sheldon" )
+students+=( ["achilles"]="Villarreal, William Cody" )
+students+=( ["bao9000"]="Vo, Bao Danh Ha" )
+students+=( ["paulvh"]="Vonder Haar, Paul Michael" )
+students+=( ["bbv92"]="Vu, Benjamin Benny-Tam" )
+students+=( ["danielv"]="Vuong, Daniel" )
+students+=( ["odlaw"]="Wallace, Brandon Daniel" )
+students+=( ["jackiew"]="Wang, Jacqueline Esther" )
+students+=( ["jwatt"]="Watt, Jason Jun Sun" )
+students+=( ["mwenden"]="Wenden, Mark Simon" )
+students+=( ["chrisw"]="Williams, Christopher B" )
+students+=( ["williams"]="Williams, Lerone Anthany" )
+students+=( ["mjw2873"]="Williams, Max Jordan" )
+students+=( ["jwillis"]="Willis, Jonathan Scott" )
+students+=( ["kw25779"]="Wong, Kevin" )
+students+=( ["mlw2892"]="Wortham, Morgan Lynne" )
+students+=( ["jxiao"]="Xiao, Jessica" )
+students+=( ["elvis103"]="Yang, Elvis" )
+students+=( ["rjy263"]="Yeh, Rose Jah Qian" )
+students+=( ["cmy353"]="Young, Christian Michael" )
+students+=( ["ohz58"]="Zahid, Omar Haseeb" )
+students+=( ["dz3485"]="Zhang, Dingkun" )
+students+=( ["lucey"]="Zhang, Xiaying" )
+students+=( ["amz469"]="Zindani, Aftab M" )
+
+# CS 53466 (morning) - sorted by name
+students+=( ["lauraah1"]="Ahumada, Laura Alexandra" )
+students+=( ["zha79"]="Alavi, Zachros Hussein" )
+students+=( ["ja32776"]="Alcantar, Javier" )
+students+=( ["megan237"]="Aldridge, Megan Marie" )
+students+=( ["ryan"]="Anderson, Ryan Mitchell" )
+students+=( ["chase23"]="Arrington, Chase Connor" )
+students+=( ["sea858"]="Aschbacher, Stephanie E" )
+students+=( ["faustin"]="Austin, Forrest James" )
+students+=( ["saber21"]="Axmed, Saber Muraad" )
+students+=( ["aayala"]="Ayala, Andrew David" )
+students+=( ["ahbass"]="Bass, Andrea Holland" )
+students+=( ["zachary"]="Bassett, George Zachary" )
+students+=( ["cbehrle"]="Behrle, Candace Marie" )
+students+=( ["lizard"]="Benefiel, Elizabeth" )
+students+=( ["sakshib"]="Bhatnagar, Sakshi" )
+students+=( ["pnb"]="Bhatt, Parth Nitinkumar" )
+students+=( ["anisha13"]="Borthakur, Anisha" )
+students+=( ["kjb2478"]="Brenner, Kenneth James" )
+students+=( ["bcb2338"]="Brostein, Bessie Celeste" )
+students+=( ["atb635"]="Brown, Aaron Travis" )
+students+=( ["suongbui"]="Bui, Suong Hong" )
+students+=( ["gkb297"]="Bulko, Gregory Kunijiro" )
+students+=( ["bunker"]="Bunker, Maxwell Albert" )
+students+=( ["bmc2462"]="Callendar, Brandon M" )
+students+=( ["ficamp"]="Campuzano, Fidel Jr" )
+students+=( ["myc"]="Chan, Megan Yunkay" )
+students+=( ["gc22838"]="Chang, Gisuk" )
+students+=( ["kayla"]="Chang Calk, Kayla Nicole" )
+students+=( ["kcharles"]="Charles, Keonna Latara" )
+students+=( ["krisenc"]="Chatarpal, Krisen D" )
+students+=( ["lchia"]="Chia, Leanne Elaine" )
+students+=( ["dcchiu"]="Chiu, Daniel Cano" )
+students+=( ["sorangc"]="Chung, Sorang" )
+students+=( ["dylanc44"]="Compo, Dylan Lawrence" )
+students+=( ["cpc13"]="Cravens, Campbell James" )
+students+=( ["dgc655"]="Curtis Dozier, Daylen G" )
+students+=( ["add2386"]="Dang, Anna Diem Huong" )
+students+=( ["darwiche"]="Darwiche, Ali Mahmoud" )
+students+=( ["aed893"]="Day, Ashley Elizabeth" )
+students+=( ["cbd445"]="De Nes, Camille Bruna" )
+students+=( ["edelong"]="Delong, Erin Alexandra" )
+students+=( ["keaton"]="Dodd, Keaton Allen" )
+students+=( ["bdreadin"]="Dreadin, Brandon Boyd" )
+students+=( ["kitape"]="Edmonds, Markita Porshea" )
+students+=( ["mle689"]="Eisman, Michelle Lea" )
+students+=( ["imanie21"]="Elbanna, Imanie Jennine" )
+students+=( ["ace744"]="Esparza, Andrea Cristina" )
+students+=( ["aje546"]="Estrada, Armando Jesus" )
+students+=( ["jcf992"]="Ferguson, John C" )
+students+=( ["afrailey"]="Frailey, Anderson Joseph" )
+students+=( ["connnorf"]="French, Connor Martin" )
+students+=( ["porphyry"]="Galloway, Joshua Loren" )
+students+=( ["jg56492"]="Garcia, Jacob Paul" )
+students+=( ["jag7548"]="Garcia, Jose Alberto" )
+students+=( ["gag784"]="Garcia Cantu, Gabriel A" )
+students+=( ["michi94"]="Garcia Moreno, Andres" )
+students+=( ["mgriffin"]="Griffin, Michael John Iv" )
+students+=( ["jhgroves"]="Groves, John Harrison" )
+students+=( ["johana"]="Guerra, Johana Lozano" )
+students+=( ["sanjana"]="Gupta, Sanjana" )
+students+=( ["nhalfi"]="Halfin, Natasha" )
+students+=( ["charger"]="Harger, Caroline Michelle" )
+students+=( ["colinh"]="Harman, Colin Christopher" )
+students+=( ["jjh2353"]="Harrell, Jammie Jimmy" )
+students+=( ["dhavien"]="Havien, Dorothy" )
+students+=( ["rgh577"]="Helmcamp, Randall Gerard" )
+students+=( ["atom"]="Hernandez, David Adam" )
+students+=( ["lsh646"]="Heytens, Luke Stearns" )
+students+=( ["mhill33"]="Hill, Miles Jordan" )
+students+=( ["paulhinz"]="Hinz, Paul Michael Ii" )
+students+=( ["amberm"]="Hirji, Amber Mehdi" )
+students+=( ["dth482"]="Hoang, Diana Tuong Vi" )
+students+=( ["hollsara"]="Holl, Sara Teall" )
+students+=( ["mdh2736"]="Howard, Marco David" )
+students+=( ["ni657"]="Inamdar, Neil" )
+students+=( ["sislam94"]="Islam, Sabeeha" )
+students+=( ["raquel17"]="Jaeger, Raquel L" )
+students+=( ["soonho"]="Jang, Soonho" )
+students+=( ["obj66"]="Javier, Oliver Benton" )
+students+=( ["khjrizen"]="Jiang, Kevin Hao" )
+students+=( ["hjohnson"]="Johnson, Heather Tomas" )
+students+=( ["dorothy"]="Jorgensen, Dorothy Lua" )
+students+=( ["elinkim"]="Kim, Hyo Won" )
+students+=( ["nick9334"]="Koustoubardis, Nicholas P" )
+students+=( ["mkwok"]="Kwok, Michelle" )
+students+=( ["wynne1"]="Labounta, Wynne Aurelia" )
+students+=( ["klam717"]="Lam, Kristine Nha Truc" )
+students+=( ["eze743"]="Lancaster, Erik Michael" )
+students+=( ["lednicky"]="Lednicky, Nicholas Alan" )
+students+=( ["al32637"]="Lee, Antony" )
+students+=( ["henrylee"]="Lee, Hin Sheng Henry" )
+students+=( ["joomilee"]="Lee, Hyojung" )
+students+=( ["jaeiilee"]="Lee, Jae Won" )
+students+=( ["slee982"]="Lee, Sara Ern Huei" )
+students+=( ["wl6289"]="Lee, Wonsuk" )
+students+=( ["jal4373"]="Lewis, Jake Austin" )
+students+=( ["licheng"]="Li, Chengxi" )
+students+=( ["clin462"]="Lin, Christine Tang" )
+students+=( ["lineback"]="Lineback, Zachary Thomas" )
+students+=( ["alosoya"]="Losoya, Angela Aguilar" )
+students+=( ["anm2634"]="Mahoney, Alyssa Marie N" )
+students+=( ["vtm239"]="Mai, Viet Thanh" )
+students+=( ["amak24"]="Manojia, Aiyaz" )
+students+=( ["amance"]="Mancenido, Amanda Lynne" )
+students+=( ["aznerik"]="Mao, Yunjian" )
+students+=( ["dmarble"]="Marble, Derrick Lloyd" )
+students+=( ["amberrm"]="Martin, Amber Renee" )
+students+=( ["taylor16"]="Martin, Taylor Elizabeth" )
+students+=( ["laura92"]="Martinez, Laura Cristina" )
+students+=( ["apm963"]="Mccormick, Andrew Paul" )
+students+=( ["alexia"]="Mercado, Alexia Yanet" )
+students+=( ["njm825"]="Merlene, Nicholas John" )
+students+=( ["cm38958"]="Mignucci, Camilla" )
+students+=( ["mlm4867"]="Molhoek, Magdalene Lee" )
+students+=( ["rmomin"]="Momin, Rukhsar" )
+students+=( ["montani"]="Montani Trujillo, I" )
+students+=( ["krypton"]="Morris, Frederick Ernest" )
+students+=( ["gamosque"]="Mosqueda, Gamaliel Aaron" )
+students+=( ["edm687"]="Moya, Erik David" )
+students+=( ["jfm2233"]="Muzquiz, Justin Fabian" )
+students+=( ["ssn443"]="Nathan, Sindhu Swami" )
+students+=( ["an22243"]="Nayani, Anjiya" )
+students+=( ["katmnew"]="Newman, Katherine Marie" )
+students+=( ["jcn565"]="Nguyen, Jaclyn Chau" )
+students+=( ["lilyn12"]="Nguyen, Lily Thuy" )
+students+=( ["qmn76"]="Nguyen, Quynh Mai" )
+students+=( ["tkn264"]="Nguyen, Thuyen Khai" )
+students+=( ["banoble"]="Noble, Brooke Ashley" )
+students+=( ["sanana30"]="Noorani, Sana Syedali" )
+students+=( ["ko4696"]="Oe, Kyoung Won" )
+students+=( ["daortega"]="Ortega, Dennis Anthony" )
+students+=( ["viortiz7"]="Ortiz, Viviana Ivonne" )
+students+=( ["rpark"]="Park, Ray Hyun" )
+students+=( ["ericpark"]="Park, Sanghyeok" )
+students+=( ["arpatel"]="Patel, Amee Rajen" )
+students+=( ["ppatel18"]="Patel, Priyasha" )
+students+=( ["vishap"]="Patel, Vishal Ketan" )
+students+=( ["eperez"]="Perez, Ethan Louis" )
+students+=( ["snp583"]="Perrilloux, Sarah Nicole" )
+students+=( ["kmp2996"]="Pham, Kevin Minh Duong" )
+students+=( ["akp823"]="Phillips, Ashley Katelyn" )
+students+=( ["np6593"]="Plagborg Moller, Nikolaj" )
+students+=( ["sp29525"]="Prasad, Shyam A" )
+students+=( ["saadia"]="Razvi, Sayyeda Saad Anwer" )
+students+=( ["amyamy"]="Recio, Amy Nima" )
+students+=( ["kred6"]="Reddy, Karthik Saimani" )
+students+=( ["bennettr"]="Rehmert, Bennett Stewart" )
+students+=( ["zrehm"]="Rehmert, Zachary Thornton" )
+students+=( ["erasto"]="Renteria, Erasto Jr" )
+students+=( ["criost"]="Rios Trevino, Carlos" )
+students+=( ["alecrios"]="Rios, Alec Jordan" )
+students+=( ["riveraaj"]="Rivera, Alma Jesenia" )
+students+=( ["tar678"]="Roberts, Ty A" )
+students+=( ["francrob"]="Robleto, Francisco Rene" )
+students+=( ["dar487"]="Rodriguez, David Alberto" )
+students+=( ["larissa5"]="Rodriguez, Larissa J" )
+students+=( ["ams6624"]="Salazar, Aura Maria" )
+students+=( ["laila"]="Salim, Laila Amine" )
+students+=( ["ers2325"]="Sanchez, Elias Roberto" )
+students+=( ["nrs697"]="Sandoval, Nicholas Ryan" )
+students+=( ["chayanit"]="Sasiponganan, Chayanit" )
+students+=( ["djs"]="Scholmer, Daniel James" )
+students+=( ["rss2359"]="Schmader, Rebecca Susan" )
+students+=( ["zschmitz"]="Schmitz, Zachary Keith" )
+students+=( ["nevshah"]="Shah, Nevel Prakash" )
+students+=( ["rdshah94"]="Shah, Rohan Dhanesh" )
+students+=( ["ks37527"]="Shao, Kevin" )
+students+=( ["amshed"]="Shedlosky, Adam Michael" )
+students+=( ["hps348"]="Sherburne, Holly Paige" )
+students+=( ["tmdwls"]="Shin, Syngjin" )
+students+=( ["ees989"]="Shtaygrud, Erik" )
+students+=( ["pas2576"]="Simons Sealy, Penelope A" )
+students+=( ["jbs2662"]="Simpson, Jeffrey Blake" )
+students+=( ["shaney"]="Smith, Shaney Ellen" )
+students+=( ["eis246"]="Sparks, Ethan Isaac" )
+students+=( ["bspink"]="Spink, Bruce A" )
+students+=( ["jassper"]="Stuart, Jennifer Ann" )
+students+=( ["erinmsun"]="Sun, Erin Mary" )
+students+=( ["zms294"]="Swindle, Zachary Michael" )
+students+=( ["jtamsma"]="Tamsma, Julia Sage" )
+students+=( ["meltyr"]="Tan, Ying Ru" )
+students+=( ["st24875"]="Tandulwadikar, Shruti" )
+students+=( ["carson"]="Taylor, Carson" )
+students+=( ["mattct"]="Thompson, Matthew C" )
+students+=( ["james"]="Thorpe, James Hamilton" )
+students+=( ["sbtio"]="Tio, Steven Bryan" )
+students+=( ["kndl2ley"]="Tooley, Kendal Nicole" )
+students+=( ["rtj1636"]="Torres, Roberto Alvarado" )
+students+=( ["anhieeee"]="Tran, Anh Quynh" )
+students+=( ["etrejo"]="Trejo, Esteban" )
+students+=( ["gt4688"]="Trueba, Gabriel Alan" )
+students+=( ["apt485"]="Tu, Anthony Phuoc" )
+students+=( ["amu269"]="Uribe, Anne Marie" )
+students+=( ["su2393"]="Usman, Saad" )
+students+=( ["acv528"]="Velez Natal, Angelica C" )
+students+=( ["dwagner"]="Wagner, Drew Taylor" )
+students+=( ["zw3274"]="Wang, Ziyuan" )
+students+=( ["jenna"]="Webb, Jenna Nicole" )
+students+=( ["awilcox"]="Wilcox, Amanda Danielle" )
+students+=( ["kwilson"]="Wilson, Kenneth Joseph" )
+students+=( ["hwise"]="Wise, Halcyone Beatty" )
+students+=( ["tkw375"]="Woolheater, Tara Kristine" )
+students+=( ["zwu"]="Wu, Zaneta Ann" )
+students+=( ["cyx56"]="Xu, Christopher Yuan" )
+students+=( ["grace"]="Ye, Xintong" )
+students+=( ["dyi531"]="Yi, David Allen" )
+students+=( ["ay3353"]="Young, Annie" )
+students+=( ["simonyu"]="Yu, Simon Sungchol" )
+students+=( ["ryudkin0"]="Yudkin, Ross H" )
+students+=( ["alanz732"]="Zambrano, Alan" )
+students+=( ["jz1992"]="Zhang, Jiannan" )
+students+=( ["tz2524"]="Zhang, Tianxiang" )
+students+=( ["kzvonek"]="Zvonek, Kaylyn Audrey" )
+
+# No idea where these came from:
+students+=( ["admani"]="Admani, Zaid" )
+students+=( ["ahmedb"]="Ahmed, Bilawal" )
+students+=( ["jpp858"]="Powers, James" )
+students+=( ["nsenter"]="Senter, Nadia" )
+students+=( ["pbhamid"]="Bhamidipati, Pranav" )
+students+=( ["tleahy"]="Leahy, Thomas" )
+
+# Unidentified (empty directories) - ignored for now
+#students+=( ["ajp2762"]="???" )
+#students+=( ["andrear"]="???" )
+#students+=( ["javier91"]="???" )
+#students+=( ["andrear"]="???" )
+#students+=( ["ptrinh"]="???" )
+#students+=( ["ramkotta"]="???" )
+
+
+
+# Check parameters:
+numregex='^[0-9]+$'
+if [ -z "$1" ] || ! [[ $1 =~ $numregex ]] ||
+   [ "$1" -gt $NUM_GRADERS ] || [ "$1" -le 0 ];
+then
+    echo "Please provide a number (1-$NUM_GRADERS)"\
+    	 "indicating your grading assignment."
+    exit
+fi
+gradernum=$1
+
+
+
+# Extract all files into grading directory (and make it shut up):
+echo "Extracting all files into $DIRECTORY ..."
+if [ -d "$DIRECTORY" ];
+then
+    rm -rf $DIRECTORY
+fi
+mkdir $DIRECTORY
+unzip CS303E-53465.GRADER.zip -d $DIRECTORY > /dev/null
+unzip CS303E-53466.GRADER.zip -d $DIRECTORY > /dev/null
+
+
+
+# Re-label all student directories by name instead of CS ID:
+echo "Re-labelling CS IDs by student names..."
+for dir in `ls $DIRECTORY`;
+do
+    newdir=${students["$dir"]}
+    if [ -z "$newdir" ];
+    then
+        echo "WARNING: Could not rename $dir: no name on file."
+    else
+    	#echo "$DIRECTORY/$dir" "$DIRECTORY/$newdir"
+        mv "$DIRECTORY/$dir" "$DIRECTORY/$newdir"
+    fi
+done
+
+
+
+# Keep only the directories assigned for grading:
+echo "Removing submissions not assigned to you..."
+numsubmissions=`ls -l $DIRECTORY | wc -l;`
+div=`python -c "from math import ceil; print int(ceil($numsubmissions/(1.0*$NUM_GRADERS)))"`
+gradernum=$(( gradernum - 1 ))
+startnum=$(( gradernum * div ))
+topnum=$(( startnum + div ))
+dirlist=()
+cd $DIRECTORY
+for dir in *;
+do
+    dirlist+=("$dir")
+done
+#bottomremove=(${dirlist[*]:0:$startnum})
+#topremove=(${dirlist[*]:$topnum:$numsubmissions})
+# Construct the removal arrays
+bottomremove=()
+topremove=()
+for ((i = 0; i < $startnum; i++));
+do
+	bottomremove+=("${dirlist[$i]}");
+done
+for ((i = $topnum; i < $numsubmissions; i++));
+do
+	topremove+=("${dirlist[$i]}");
+done
+
+# Remove all the ignored directories
+for ((i = 0; i < ${#bottomremove[@]}; i++));
+do
+    rm -rf "${bottomremove[$i]}"
+done
+for ((i = 0; i < ${#topremove[@]}; i++));
+do
+	#echo ${topremove[$i]}
+    rm -rf "${topremove[$i]}"
+done
+cd ..
+if [ $topnum -gt $numsubmissions ];
+then
+	topnum=$numsubmissions
+fi
+num2grade=$(( topnum - startnum ))
+startnum=$(( startnum + 1 ))
+echo ">>> You have $num2grade out of $numsubmissions items to grade:"\
+	 "$startnum to $topnum."
+
+
+# TODO - file removal not finished
+echo "Submissions are now sorted alphabetically by last name in:"
+dir=${DIRECTORY#"."}
+echo "     `pwd`$dir"
+exit
+
+
+
+# Keep only relevant files (e.g "hw1.py") and remove everything else:
+echo "Trying to remove irrelevant files..."
+
+# Extract args (2+) and convert them to lowercase
+hwfiles=()
+for arg in "$@"
+do
+	if ! [[ $arg == gradernum ]];
+	then
+		lwr=`echo $arg | tr '[:upper:]' '[:lower:]';`
+		hwfiles+=($lwr)
+	fi
+done
+
+# If no hwfiles, skip this step
+if [ ${#hwfiles[@]} -le 1 ];
+then
+	echo "No user files were removed. Done."
+	exit
+fi
+
+for dir in `ls $DIRECTORY`;
+do
+    numkept=0
+    for f in `ls $DIRECTORY/$dir`;
+    do
+        # Convert filename to lower case and try to match it against an argument
+        lwr=`echo $f | tr '[:upper:]' '[:lower:]';` 
+        keep=0
+        for hwf in ${hwfiles[*]}
+        do
+            if [ "$lwr" == "$hwf" ];
+            then
+                keep=$(( keep + 1 ))
+            fi
+        done
+        # If file is unrelated, remove it
+        if [ $keep == 0 ];
+        then
+            rm $DIRECTORY/$dir/$f > /dev/null
+        else
+            numkept=$(( numkept + 1 ))
+        fi
+    done
+    # If all files were removed from this directory, warn the user
+    if [ $numkept == 0 ];
+    then
+        echo "WARNING: User $dir has no files matching your criteria."
+    fi
+done
+
+echo "Removed all irrelevant user files. Done."

@@ -10,7 +10,7 @@ outputFilename = 'assignment4.txt'
 outputFile = open(outputFilename, 'w+')
 outputFile.write('CSID\tGrade\tComments\n')
 filename = "Day.py"
-dateString = "10-01-2013 23:00:00"
+dateString = "02-17-2014 23:00:00"
 inputArray = open('input.txt','r').read().split()
 
 def main():
@@ -48,7 +48,7 @@ def assign4( csid , writeToFile) :
   grade = 70
   style = 30
   wrongFileName = False
-  header = True
+  header = 'y'
   comments = " "
 
   os.chdir(csid)
@@ -115,18 +115,15 @@ def assign4( csid , writeToFile) :
     if wrongCount != 0 or closeCount != 0:
         grade -= (2 * wrongCount) 
         grade -= (1 * closeCount)
-        comments += " Output did not match instructors, "
+        comments += "Output did not match instructor's. "
 
 
   #checking for header and style
   #os.system('vim ' + fileToGrade)
   input("Hit Enter to cat")
   print(subprocess.getoutput('cat ' + fileToGrade))
-  headerInput = input("Header( (y or enter)  /  n)? ")
-  if headerInput == 'y' or headerInput == '' :
-    header = True
-  else :
-    header = False
+  headerInput = input("Header( (y or enter)  /  n / d (if problem with desription) )? ")
+  header = 'y' if headerInput == '' else headerInput
   style = input("Style/Comments (Enter a number out of 30 to represent their grade, hit enter for 30): ")
   comments += input ("General Comments?:  ")
   if not style.isdigit() :
@@ -149,11 +146,14 @@ def assign4( csid , writeToFile) :
       grade -= 10
     
     if wrongFileName :
-      comments += " wrong filename, "
+      comments += "Wrong filename. "
       grade -= 10
-    if not header :
-      comments += " no/malformed header, "
+    if header  == 'n':
+      comments += "You need a header at the top of your code. "
       grade -= 10
+    elif header  == 'd':
+      comments += "The description in your header should briefly explain what the program does. "
+      grade -= 2
 
     if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', '))
       
@@ -166,7 +166,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

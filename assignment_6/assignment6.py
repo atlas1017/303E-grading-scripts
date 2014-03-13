@@ -12,7 +12,7 @@ outputFilename = 'assignment6.txt'
 outputFile = open(outputFilename, 'w+')
 outputFile.write('CSID\tGrade\tComments\n')
 filename = "Hailstone.py"
-dateString = "10-11-2013 23:00:00"
+dateString = "03-05-2012 23:05:00"
 inputArray = open('input.txt','r').read().split("\n")
 
 def main():
@@ -188,7 +188,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

@@ -98,11 +98,8 @@ def assign5( csid , writeToFile) :
     closeCount = 0 
     wrongCount = 0
     for answer in answers:
-      nums = re.findall("\D+(\d+\.\d+)\D+(\d+\.\d+e?-?\d*)", answer)
-      if len(nums) != 1:
-        wrongCount += 1
-        continue
-      elif len(nums[0]) != 2:
+      nums = re.findall("[^0-9-]+(-?\d+\.\d+)[^0-9-]+(-?\d+\.\d+e?-?\d*)", answer)
+      if len(nums) != 1 or len(nums[0]) != 2:
         wrongCount += 1
         continue
       sqrt = float(nums[0][0])
@@ -110,7 +107,7 @@ def assign5( csid , writeToFile) :
       rounded = round(float(correct[correctCount]),11)
 
       #perfect check
-      perfect = "Enter a positive number: Square root is: " + str(sqrt) +"\\nDifference is: " + str(diff)+"\\n"
+      perfect = "Enter a positive number: \\nSquare root is: " + str(sqrt) +"\\n\\nDifference is: " + str(diff)+"\\n"
       if perfect == answer:
         print('Perfect answer for #', correctCount + 1)
         perfectCount +=1
@@ -132,17 +129,19 @@ def assign5( csid , writeToFile) :
     except KeyboardInterrupt:
       grade -= 10
     answer = str(out)[2:-1]
-    nums = re.findall("\D+(\d+\.\d+)\D+(\d+\.\d+e?-?\d*)", answer)
-    if len(nums) == 0:
-      wrongCount += 5
-    elif len(nums[0]) != 2:
+    nums = re.findall("[^0-9-]+(-?\d+\.\d+)[^0-9-]+(-?\d+\.\d+e?-?\d*)", answer)
+    if len(nums) == 0 or len(nums[0]) != 2:
       wrongCount += 5
     else:
-      sqrt = float(nums[0][-2])
-      diff = float(nums[0][-1])
+      sqrt = float(nums[0][0])
+      diff = float(nums[0][1])
       rounded = round(float(correct[correctCount]),11)
-      perfect = "Enter a positive number: Square root is: " + str(sqrt) +"\\nDifference is: " + str(diff) +"\\n"
-      if perfect in answer:
+      perfect = "Enter a positive number: \\nSquare root is: " + str(sqrt) +"\\n\\nDifference is: " + str(diff)+"\\n"
+      # Allow for an error message. Split into 2 parts because the decimal points
+      # are misinterpretted by the regex evaluator.
+      perfectRegex = "Enter a positive number: .*"
+      perfectLiteral2 = "Square root is: " + str(sqrt) +"\\n\\nDifference is: " + str(diff)+"\\n"
+      if re.match(perfectRegex, answer) and answer.find(perfectLiteral2) != -1:
         print('Perfect answer for bad input')
         perfectCount +=5
       elif diff < 1e-6 and (str(rounded) in str(sqrt) or str(correct[correctCount]) == str(sqrt)): 

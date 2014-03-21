@@ -157,9 +157,10 @@ def assign5( csid , writeToFile) :
     print("Close:", str(closeCount) + "/10")
     print("Wrong:", str(wrongCount) + "/10")
     if wrongCount != 0 or closeCount != 0:
-        grade -= (2 * wrongCount) 
-        grade -= (1 * closeCount)
-        comments += " Output did not match instructors P: "+str(perfectCount)+" C: "+str(closeCount)+" W: "+str(wrongCount)+ ", "
+      output_pts = input("Enter number of points (out of 20) for output: ")
+      if output_pts.isdigit() and eval(output_pts) < 20:
+        grade -= 20 - eval(output_pts)
+        comments += " Output did not match instructor's. "
 
 
   #checking for header and style

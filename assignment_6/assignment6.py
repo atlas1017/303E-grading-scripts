@@ -12,7 +12,7 @@ outputFilename = 'assignment6.txt'
 outputFile = open(outputFilename, 'w+')
 outputFile.write('CSID\tGrade\tComments\n')
 filename = "Hailstone.py"
-dateString = "03-05-2012 23:05:00"
+dateString = "03-05-2014 23:05:00"
 inputArray = open('input.txt','r').read().split("\n")
 
 def main():
@@ -135,9 +135,18 @@ def assign6( csid , writeToFile) :
     print("Close:", str(closeCount) + "/10")
     print("Wrong:", str(wrongCount) + "/10")
     if wrongCount != 0 or closeCount != 0:
-        grade -= (3 * wrongCount) 
-        grade -= (1 * closeCount)
-        comments += " Output did not match instructors P: "+str(perfectCount)+" C: "+str(closeCount)+" W: "+str(wrongCount)+ ", "
+        suggested_deduction = 3*wrongCount + 1*closeCount
+        deduction = input("How much to deduct for this output? Enter number or \
+                          hit enter for suggested deduction (-" + 
+                          str(suggested_deduction) + "): ")
+        if not deduction.isdigit() :
+          deduction = suggested_deduction
+        else :
+          deduction = int(deduction)
+        grade -= deduction
+        comments += " Output did not match instructor's. Perfect: " + \
+                    str(perfectCount) + " Close: " + str(closeCount) + \
+                    " Wrong: " + str(wrongCount) + "(-" + str(deduction) + "). "
 
 
   #checking for header and style
@@ -161,23 +170,23 @@ def assign6( csid , writeToFile) :
     if writeToFile: outputFile.write('0\t More than 7 days late')
   else :
     if late == 3:
-      comments = "3 - 7 days late, "
+      comments += " 3 - 7 days late (-30). "
       grade -= 30
     elif late == 2 :
-      comments = "2 days late, "
+      comments += " 2 days late (-20). "
       grade -= 20
     elif late == 1 :
-      comments = "1 day late, "
+      comments += " 1 day late (-10). "
       grade -= 10
     
     if wrongFileName :
-      comments += " wrong filename, "
+      comments += " Wrong filename (-10). "
       grade -= 10
     if not header :
-      comments += " no/malformed header, "
+      comments += " No/malformed header (-10). "
       grade -= 10
 
-    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', '))
+    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments)
       
   if writeToFile: outputFile.write('\n')
   os.chdir("..")

@@ -12,7 +12,7 @@ outputFilename = 'assignment6.txt'
 outputFile = open(outputFilename, 'w+')
 outputFile.write('CSID\tGrade\tComments\n')
 filename = "Hailstone.py"
-dateString = "03-05-2014 23:05:00"
+dateString = "03-05-2014 23:00:00"
 inputArray = open('input.txt','r').read().split("\n")
 
 def main():
@@ -135,9 +135,9 @@ def assign6( csid , writeToFile) :
     print("Close:", str(closeCount) + "/10")
     print("Wrong:", str(wrongCount) + "/10")
     if wrongCount != 0 or closeCount != 0:
-        suggested_deduction = 3*wrongCount + 1*closeCount
-        deduction = input("How much to deduct for this output? Enter number or \
-                          hit enter for suggested deduction (-" + 
+        suggested_deduction = 3*wrongCount
+        deduction = input("How much to deduct for this output? Enter number or " +
+                          "hit enter for suggested deduction (-" + 
                           str(suggested_deduction) + "): ")
         if not deduction.isdigit() :
           deduction = suggested_deduction
@@ -146,7 +146,7 @@ def assign6( csid , writeToFile) :
         grade -= deduction
         comments += " Output did not match instructor's. Perfect: " + \
                     str(perfectCount) + " Close: " + str(closeCount) + \
-                    " Wrong: " + str(wrongCount) + "(-" + str(deduction) + "). "
+                    " Wrong: " + str(wrongCount) + " (-" + str(deduction) + "). "
 
 
   #checking for header and style

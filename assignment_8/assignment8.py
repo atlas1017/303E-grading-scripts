@@ -205,11 +205,12 @@ def assign8( csid , writeToFile) :
   style = input("Style/Other (Out of 30, hit enter for 30): ")
   gen_comments = input("General Comments?: ").strip()
   gen_comments = gen_comments if len(gen_comments) is not 0 else "code style looks fine"
-  if not style.isdigit() :
+  if not style.isdigit() or style == 30:
     style = 30
+    gen_comments += " (-0)"
   else :
     style = int(style)
-  gen_comments += " (%+d)" % (style - 30)
+    gen_comments += " (%+d)" % (style - 30)
   comments.append("%s" % gen_comments)
   
   #writing grade time!

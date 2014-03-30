@@ -9,7 +9,7 @@ import difflib
 outputFilename = 'assignment7.txt'
 outputFile = open(outputFilename, 'a')
 filename = "Deal.py"
-dateString = "10-15-2013 23:00:00"
+dateString = "03-19-2014 23:00:00"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -143,23 +143,23 @@ def assign6( csid , writeToFile) :
     print('Late more than 7 days!')
   else :
     if late == 3:
-      comments = "3 - 7 days late, "
+      comments += " 3 - 7 days late (-30). "
       grade -= 30
     elif late == 2 :
-      comments = "2 days late, "
+      comments += " 2 days late (-20). "
       grade -= 20
     elif late == 1 :
-      comments = "1 day late, "
+      comments += " 1 day late (-10). "
       grade -= 10
     
     if wrongFileName :
-      comments += " wrong filename, "
+      comments += " Wrong filename (-10). "
       grade -= 10
     if not header :
-      comments += " no/malformed header, "
+      comments += " No/malformed header (-10). "
       grade -= 10
 
-    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments.rstrip(', '))
+    if writeToFile: outputFile.write(str(grade+style) + "\t"+comments)
       
   if writeToFile: outputFile.write('\n')
   os.chdir("..")
@@ -170,7 +170,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

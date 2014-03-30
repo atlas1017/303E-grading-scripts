@@ -95,7 +95,10 @@ def assign8( csid , writeToFile) :
     # perfect match
     first_line = "Computation of PI using Random Numbers"
     last_line = "Difference = Calculated PI - math.pi"
-    regex_perfect = "^num = 100[0 ]{5}   Calculated PI = \d\.\d{6}   Difference = [+-]\d(?:\.\d{6}|e[+-]\d{5})$"
+    # Columns must line up, the calculated pi must have 6 decimal places, and
+    # there must be a +/- in front of the difference. However, column spacing
+    # can be off by +/- 1.
+    regex_perfect = "^num = 100[0 ]{5}  [ ]{0,2}Calculated PI = \d\.\d{6}  [ ]{0,2}Difference = [+-]\d(?:\.\d{6}|e[+-]\d{5})$"
     regex_left = "100[\d\s]{5}"
     regex_mid = "=\s*[\d\.]{8}"
     regex_right = "[+-e\d\.]{9}$"
@@ -109,7 +112,7 @@ def assign8( csid , writeToFile) :
         out = process.communicate(bytes('50000', 'UTF-8'))[0]
       except KeyboardInterrupt:
         out = "\n\n\n\n"
-      answer = list(line.rstrip().lstrip() for line in str(out)[2:-1].replace('\\n', '\n').rstrip().lstrip().split('\n'))
+      answer = list(line.strip() for line in str(out)[2:-1].replace('\\n', '\n').strip().split('\n'))
       print('\n'.join(answer))
 
       # grab the difference

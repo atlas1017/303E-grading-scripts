@@ -11,7 +11,7 @@ outputFilename = 'assignment8.txt'
 outputFile = open(outputFilename, 'a')
 averageNumRuns = 5
 filename = "CalculatePI.py"
-dateString = "10-18-2013 23:00:00"
+dateString = "03-24-2014 23:00:00"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -200,8 +200,8 @@ def assign8( csid , writeToFile) :
   else :
     header = False
   style = input("Style/Other (Out of 30, hit enter for 30): ")
-  gen_comments = input("General Comments?: ").rstrip().lstrip()
-  gen_comments = gen_comments if len(gen_comments) is not 0 else "looks fine"
+  gen_comments = input("General Comments?: ").strip()
+  gen_comments = gen_comments if len(gen_comments) is not 0 else "style looks fine"
   if not style.isdigit() :
     style = 30
   else :
@@ -242,7 +242,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

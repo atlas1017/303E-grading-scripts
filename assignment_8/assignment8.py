@@ -185,8 +185,8 @@ def assign8( csid , writeToFile) :
         comments.append("diff not expressed to six decimals or without sign (-5)")
         grade -= 5
       if not correct_format_other:
-        print("spacing or other general misformatting output (-5)")
-        comments.append("spacing or other general misformatting output (-5)")
+        print("spacing or other general misformatting in output (-5)")
+        comments.append("spacing or other general misformatting in output (-5)")
         grade -= 5
       if not valid_output:
         print("calculations are wrong (-5)")
@@ -204,7 +204,7 @@ def assign8( csid , writeToFile) :
     header = False
   style = input("Style/Other (Out of 30, hit enter for 30): ")
   gen_comments = input("General Comments?: ").strip()
-  gen_comments = gen_comments if len(gen_comments) is not 0 else "style looks fine"
+  gen_comments = gen_comments if len(gen_comments) is not 0 else "code style looks fine"
   if not style.isdigit() :
     style = 30
   else :

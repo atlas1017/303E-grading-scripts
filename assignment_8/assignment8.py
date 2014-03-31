@@ -112,7 +112,7 @@ def assign8( csid , writeToFile) :
         out = process.communicate(bytes('50000', 'UTF-8'))[0]
       except KeyboardInterrupt:
         out = "\n\n\n\n"
-      answer = list(line.strip() for line in str(out)[2:-1].replace('\\n', '\n').strip().split('\n'))
+      answer = list(line.strip() for line in str(out)[2:-1].replace('\\n', '\n').replace('\\t', '\t').strip().split('\n'))
       print('\n'.join(answer))
 
       # grab the difference

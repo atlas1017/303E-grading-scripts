@@ -125,7 +125,7 @@ def assign8( csid , writeToFile) :
         pass
 
       # perfect matching
-      correct_format_other = correct_format_other and first_line in answer and last_line in answer and len(answer) is 10
+      correct_format_other = correct_format_other and answer[0] == first_line and answer[-1] == last_line and len(answer) is 10
       try:
         perfect_matches = list(filter(lambda match: match is not None, [re.search(regex_perfect, line) for line in answer]))
         correct_format_other = correct_format_other and len(perfect_matches) is 6

@@ -173,21 +173,28 @@ def assign8( csid , writeToFile) :
       grade -= 25
     else:
       if not correct_format_left:
-        print("num not left justified (-5)")
-        comments.append("num not left justified (-5)")
-        grade -= 5
+        manual_override = input("Is num left justified? (y / (n or enter)): ")
+        if manual_override != 'y':
+          comments.append("num not left justified (-5)")
+          grade -= 5
       if not correct_format_mid:
-        print("pi not expressed to six decimals or with sign (-5)")
-        comments.append("pi not expressed to six decimals or with sign (-5)")
-        grade -= 5
+        manual_override = input("Does pi have 6 decimals and no sign in front? (y / (n or enter)): ")
+        if manual_override != 'y':
+          comments.append("pi not expressed to six decimals or with sign (-5)")
+          grade -= 5
       if not correct_format_right:
-        print("diff not expressed to six decimals or without sign (-5)")
-        comments.append("diff not expressed to six decimals or without sign (-5)")
-        grade -= 5
+        manual_override = input("Does diff have 6 decimals and a sign in front? (y / (n or enter)): ")
+        if manual_override != 'y':
+          comments.append("diff not expressed to six decimals or without sign (-5)")
+          grade -= 5
       if not correct_format_other:
-        print("spacing or other general misformatting in output (-5)")
-        comments.append("spacing or other general misformatting in output (-5)")
-        grade -= 5
+        manual_override = input("Is there spacing or other general misformatting " +
+                                "not yet covered? This includes the case where " +
+                                "they forgot to have the opening and ending lines. " +
+                                "((y or enter) / n): ")
+        if manual_override != 'n':
+          comments.append("spacing or other general misformatting in output (-5)")
+          grade -= 5
       if not valid_output:
         print("calculations are wrong (-5)")
         comments.append("diff is wrong sign or just wrong (-5)")

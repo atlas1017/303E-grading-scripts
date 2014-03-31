@@ -20,17 +20,17 @@ def main():
     outputFile.write('CSID\tGrade\tComments\n')
     lowerBound = sys.argv[1]
     upperBound = sys.argv[2] + '~';
-    myList = []
+    myCSIDs = []
     count = 0
-    for item in CSIDS:
-      if lowerBound <= item <= upperBound:
-        if "." not in item :
-          myList.append( item )
-    for csid in myList :
+    for csid in CSIDS:
+      if lowerBound <= csid <= upperBound:
+        if "." not in csid :
+          myCSIDs.append( csid )
+    for csid in myCSIDs :
       count += 1
       os.system('clear')
       print('======================')
-      print(csid + " " + str(count) + " out of " + str(len(myList)))
+      print(csid, count, "out of", len(myCSIDs))
       print('======================')
       assign8( csid , True)
   #singleton mode

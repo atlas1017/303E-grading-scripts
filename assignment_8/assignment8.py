@@ -193,7 +193,9 @@ def assign8( csid , writeToFile) :
                                 "they forgot to have the opening and ending lines. " +
                                 "((y or enter) / n): ")
         if manual_override != 'n':
-          comments.append("spacing or other general misformatting in output (-5)")
+          explanation = input("Care to elaborate? ")
+          if explanation == "": explanation = "spacing or other general misformatting in output"
+          comments.append(explanation + " (-5)")
           grade -= 5
       if not valid_output:
         print("calculations are wrong (-5)")

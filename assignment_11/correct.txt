@@ -1,18 +1,18 @@
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nTCG
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nTCG
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nGGACC
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nGGACC
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nNo Common Sequence Found
+Enter first strand: Enter second strand: \nCommon Substring(s):\nTCG
+Enter first strand: Enter second strand: \nCommon Substring(s):\nTCG
+Enter first strand: Enter second strand: \nCommon Substring(s):\nGGACC
+Enter first strand: Enter second strand: \nCommon Substring(s):\nGGACC
+Enter first strand: Enter second strand: \nCommon Substring(s):\nNo Common Sequence Found
 Enter first strand: Enter second strand: \nNo Common Sequence Found
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nTG
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nTG
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nATTA
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nATTA
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nTGCA
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nTGCA
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nACACACACACACACACACACACACACACACACACACACACACACACACA\nCACACACACACACACACACACACACACACACACACACACACACACACAC
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nACACACACACACACACACACACACACACACACACACACACACACACACA\nCACACACACACACACACACACACACACACACACACACACACACACACAC
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nTGAT\nGGAC\nCCCC
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nTGAT\nGGAC\nCCCC
-Enter first strand: Enter second strand: \nCommon Subsequence(s):\nNo Common Sequence Found
+Enter first strand: Enter second strand: \nCommon Substring(s):\nTG
+Enter first strand: Enter second strand: \nCommon Substring(s):\nTG
+Enter first strand: Enter second strand: \nCommon Substring(s):\nATTA
+Enter first strand: Enter second strand: \nCommon Substring(s):\nATTA
+Enter first strand: Enter second strand: \nCommon Substring(s):\nTGCA
+Enter first strand: Enter second strand: \nCommon Substring(s):\nTGCA
+Enter first strand: Enter second strand: \nCommon Substring(s):\nACACACACACACACACACACACACACACACACACACACACACACACACA\nCACACACACACACACACACACACACACACACACACACACACACACACAC
+Enter first strand: Enter second strand: \nCommon Substring(s):\nACACACACACACACACACACACACACACACACACACACACACACACACA\nCACACACACACACACACACACACACACACACACACACACACACACACAC
+Enter first strand: Enter second strand: \nCommon Substring(s):\nTGAT\nGGAC\nCCCC
+Enter first strand: Enter second strand: \nCommon Substring(s):\nTGAT\nGGAC\nCCCC
+Enter first strand: Enter second strand: \nCommon Substring(s):\nNo Common Sequence Found
 Enter first strand: Enter second strand: \nNo Common Sequence Found

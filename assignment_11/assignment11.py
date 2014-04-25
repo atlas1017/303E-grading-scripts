@@ -17,7 +17,7 @@ inputLines = inputFile.read().splitlines()
 correctFile = open('correct.txt','r')
 correctLines = correctFile.read().splitlines()
 filename = "DNA.py"
-dateString = "11-1-2013 23:59:59"
+dateString = "03-28-2014 23:59:59"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -94,7 +94,7 @@ def assign11(csid , writeToFile) :
   '''
   tests 1-6 are 3 points
   7 and 8 are for multiple subsequences and are 4 points
-  test 9 is to make sure they dno't output singleton matches and is 3 points
+  test 9 is to make sure they don't output singleton matches and is 3 points
   '''
   if late != -1:
     answers = []
@@ -118,9 +118,10 @@ def assign11(csid , writeToFile) :
     count = 0
     for normal_out,extra_credit_out,out in zip(correctLines[0::2],correctLines[1::2],answers[:10]):
       printed = False
+      correct_formatting = True
       count += 1
       normal_out = normal_out.replace('\\n','\n')
-      print("=====Test "+str(count)+"=====")
+      print("\n=====Test "+str(count)+"=====")
       extra_credit_out = extra_credit_out.replace('\\n','\n')
       # there was some ambiguity on if the no sequence found text had a period or not
       out = out.replace('.','')
@@ -129,8 +130,9 @@ def assign11(csid , writeToFile) :
       if not extra_credit and correct_formatting and out != normal_out :
         print("\tIncorrect Formatting -5")
         print("\t=====Correct=====\n"+normal_out+"\n\t=====Output=====\n"+out)
-        printed = True
-        correct_formatting = False
+        if input("Hit enter to accept deduction, or type n: ") == "":
+          printed = True
+          correct_formatting = False
 
       #check correctness
       #if there's a perfect match no need to fuzzy match
@@ -244,7 +246,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

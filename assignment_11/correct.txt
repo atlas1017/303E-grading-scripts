@@ -2,8 +2,8 @@ Enter first strand: Enter second strand: \nCommon Substring(s):\nTCG
 Enter first strand: Enter second strand: \nCommon Substring(s):\nTCG
 Enter first strand: Enter second strand: \nCommon Substring(s):\nGGACC
 Enter first strand: Enter second strand: \nCommon Substring(s):\nGGACC
-Enter first strand: Enter second strand: \nCommon Substring(s):\nNo Common Sequence Found
-Enter first strand: Enter second strand: \nNo Common Sequence Found
+Enter first strand: Enter second strand: \nCommon Substring(s):\nNo Common Substring Found
+Enter first strand: Enter second strand: \nNo Common Substring Found
 Enter first strand: Enter second strand: \nCommon Substring(s):\nTG
 Enter first strand: Enter second strand: \nCommon Substring(s):\nTG
 Enter first strand: Enter second strand: \nCommon Substring(s):\nATTA
@@ -14,5 +14,5 @@ Enter first strand: Enter second strand: \nCommon Substring(s):\nACACACACACACACA
 Enter first strand: Enter second strand: \nCommon Substring(s):\nACACACACACACACACACACACACACACACACACACACACACACACACA\nCACACACACACACACACACACACACACACACACACACACACACACACAC
 Enter first strand: Enter second strand: \nCommon Substring(s):\nTGAT\nGGAC\nCCCC
 Enter first strand: Enter second strand: \nCommon Substring(s):\nTGAT\nGGAC\nCCCC
-Enter first strand: Enter second strand: \nCommon Substring(s):\nNo Common Sequence Found
-Enter first strand: Enter second strand: \nNo Common Sequence Found
+Enter first strand: Enter second strand: \nCommon Substring(s):\nNo Common Substring Found
+Enter first strand: Enter second strand: \nNo Common Substring Found

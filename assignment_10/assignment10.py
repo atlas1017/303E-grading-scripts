@@ -14,7 +14,7 @@ outputFile = open(outputFilename, 'a')
 filename = "Cipher.py"
 files_to_encrypt = ('encrypt1.txt', 'encrypt2.txt', 'encrypt3.txt')
 files_to_decrypt = ('decrypt1.txt', 'decrypt2.txt', 'decrypt3.txt')
-dateString = "10-28-2013 23:59:59"
+dateString = "04-04-2014 23:59:59"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -93,7 +93,7 @@ def assign10(csid , writeToFile) :
   def cp_run_and_diff (stdin_text, file_to_copy, file_correct, stdout_correct):
     os.chdir('..')
     subprocess.getoutput('rm %soutput.txt' % csid)
-    os.system('cp %s %s/input.txt' % (file_to_copy, csid))
+    os.system("cp %s '%s/input.txt'" % (file_to_copy, csid))
     os.chdir(csid)
     process = subprocess.Popen(['python3', fileToGrade], **pipes)
     stdout_output = str(process.communicate(bytes(stdin_text, 'UTF-8'))[0])[2:-1]
@@ -244,7 +244,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

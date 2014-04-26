@@ -184,10 +184,11 @@ def assign10(csid , writeToFile) :
         comments.append("failed decrypt multi (-5)")
         num_off += 5
       if not format_test:
-        print_fail (functionality_fail)
-        print("\tSTDOUT Formatting")
-        comments.append("incorrect formatting (-5)")
-        num_off += 5
+        if input('Deduct points for output? (enter or n): ') != 'n':
+          print_fail (functionality_fail)
+          print("\tSTDOUT Formatting")
+          comments.append("incorrect formatting (-5)")
+          num_off += 5
       grade -= num_off
       print("Total off: (-%d)" % num_off)
 

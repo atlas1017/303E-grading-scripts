@@ -13,7 +13,7 @@ pipes = {'stdout':subprocess.PIPE, 'stdin':subprocess.PIPE, 'stderr':subprocess.
 outputFilename = 'assignment15.txt'
 outputFile = open(outputFilename, 'a')
 filename = "Benford.py"
-dateString = "12-02-2013 23:59:59"
+dateString = "04-28-2014 23:59:59"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -44,7 +44,6 @@ def main():
     print('======================')
     assign15( csid , False)
   outputFile.close()
-  inputFile.close()
 
 def assign15(csid , writeToFile) :
   fileToGrade = ""
@@ -245,7 +244,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

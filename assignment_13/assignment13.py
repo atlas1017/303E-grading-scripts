@@ -18,8 +18,7 @@ file_names = ('horizontal', 'vertical', 'backwards', 'non_square', 'not_found')
 # Worth 10 bonus points
 bonus_name = 'diagonal'
 
-dateString = "11-15-2013 23:59:59"
-dateString = "12-7-2013 23:59:59"
+dateString = "04-22-2014 23:59:59"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -98,9 +97,9 @@ def assign13(csid , writeToFile) :
   def cp_run_and_diff (file_to_copy):
     nonlocal perfect_formatting
     os.chdir ('..')
-    subprocess.getoutput('rm %s/hidden.txt' % csid)
-    subprocess.getoutput('rm %s/found.txt' % csid)
-    os.system('cp %s.txt %s/hidden.txt' % (file_to_copy, csid))
+    subprocess.getoutput('rm "%s/hidden.txt"' % csid)
+    subprocess.getoutput('rm "%s/found.txt"' % csid)
+    os.system('cp %s.txt "%s/hidden.txt"' % (file_to_copy, csid))
     os.chdir(csid)
     subprocess.getoutput('python3 %s' % fileToGrade)
     if file_to_copy != bonus_name:
@@ -241,7 +240,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

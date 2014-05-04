@@ -15,7 +15,7 @@ filename = "ISBN.py"
 input_file = 'isbn.txt' 
 output_file = 'isbnOut.txt'
 testCases = 10
-dateString = "11-11-2013 23:59:59"
+dateString = "04-15-2014 23:59:59"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -90,7 +90,7 @@ def assign12(csid , writeToFile) :
   # run student's isbn.py and compare their output with standard output
   def run_program_compare():
     os.chdir('..')
-    os.system('cp %s %s/isbn.txt' % (input_file, csid))
+    os.system('cp %s "%s/isbn.txt"' % (input_file, csid))
     os.chdir(csid)
     command = 'python3 ' + fileToGrade
     os.system( command )
@@ -138,9 +138,10 @@ def assign12(csid , writeToFile) :
       print("Excellent! passed all tests")
       comments.append("passed all tests")
     else:
-      grade = grade - (30/testCases) * wrongTests
-      c = str(wrongTests) + " are wrong"
-      comments.append(c)
+      points_off = int((wrongTests/testCases) * 30)
+      grade -= points_off
+      c = "failed " + str(wrongTests) + "/" + str(testCases) + " test cases"
+      comments.append(c + " (-" + str(points_off) + ")")
 
   #checking for header and style
   #os.system('vim ' + fileToGrade)
@@ -195,7 +196,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :

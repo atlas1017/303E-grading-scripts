@@ -126,18 +126,7 @@ def assign14(csid , writeToFile) :
     initialPrompt + '\nGuess  1 :  The number you thought was 50\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nEnter 1 if my guess was high, -1 if low, and 0 if correct: \n' + goodResponse,
     initialPrompt + '\nGuess  1 :  The number you thought was 50\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  2 :  The number you thought was 25\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  3 :  The number you thought was 37\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  4 :  The number you thought was 31\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  5 :  The number you thought was 34\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  6 :  The number you thought was 32\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  7 :  The number you thought was 33\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \n'+badResponse
   ]
-  # Due to the ambiguity in the directions stating to "keep repeating the guess"
-  # when an input other than 1, 0, or -1 is entered, some students repeated the
-  # whole guess including "Guess x : The number you thought was y" and not just
-  # the prompt for a new input.
-  alternateWrongGuessOutput = (initialPrompt + '\n' +
-                               'Guess  1 :  The number you thought was 50\n' +
-                               'Enter 1 if my guess was high, -1 if low, and 0 if correct: \n' +
-                               'Guess  1 :  The number you thought was 50\n' +
-                               'Enter 1 if my guess was high, -1 if low, and 0 if correct: \n' +
-                               'Guess  1 :  The number you thought was 50\n' +
-                               'Enter 1 if my guess was high, -1 if low, and 0 if correct: \n' +
-                               goodResponse)
+
   if late != -1:
     answers = []
     for i, test in enumerate(testCases):
@@ -148,64 +137,69 @@ def assign14(csid , writeToFile) :
       except KeyboardInterrupt:
         print(" on test" +str(i+1))
 
+    # Check formatting using the first test case.
     correct_formatting = True
+    answer_lines = answers[0].replace('  ', ' ').split('\n')
+    correct_lines = correctOutput[0].replace('  ', ' ').split('\n')
+    if len(answer_lines) != len(correct_lines):
+      formatting_mistake = "Output has the wrong number of lines."
+      correct_formatting = False
+    elif "Guessing Game" not in answer_lines[0]:
+      formatting_mistake = "First line in output is incorrect."
+      correct_formatting = False
+    elif "Think of a number between 1 and 100 inclusive." not in answer_lines[2] or \
+         "And I will guess what it is in 7 tries or less." not in answer_lines[3]:
+      formatting_mistake = "Game intro is missing or incorrect."
+      correct_formatting = False
+    elif "Are you ready? (y/n):" not in answer_lines[5]:
+      formatting_mistake = "Did not ask if user was ready."
+      correct_formatting = False
+    elif "Guess 1" not in answer_lines[6] or \
+         "Guess 2" not in answer_lines[8] or \
+         "Guess 3" not in answer_lines[10]:
+      formatting_mistake = "Didn't list guess numbers correctly."
+      correct_formatting = False
+    elif "Enter 1 if my guess was high, -1 if low, and 0 if correct:" not in answer_lines[7] or \
+         "Enter 1 if my guess was high, -1 if low, and 0 if correct:" not in answer_lines[9] or \
+         "Enter 1 if my guess was high, -1 if low, and 0 if correct:" not in answer_lines[11]:
+      formatting_mistake = "Didn't promp user to enter 0, -1, or 1 correctly."
+      correct_formatting = False
+    elif "Thank you for playing the Guessing Game." not in answer_lines[-1]:
+      formatting_mistake = "Did not correctly thank the user for playing."
+      correct_formatting = False
+    
+    if not correct_formatting:
+      print("\tIncorrect Formatting (-5)")
+      print("\t=====Correct=====\n\t"+'\n\t'.join(correct_lines)+"\n\t=====Output=====\n\t"+'\n\t'.join(answer_lines))
 
-    # gradin' normal tests 
-    correct = ""
+    # gradin' normal tests
     numFailed = 0
-    # Used to remove numbers from output.
-    pattern = re.compile(r'\d+')
     for i,(correct,out) in enumerate(zip(correctOutput,answers)):
-      printed = False
       print("=====Test "+str(i+1)+"=====")
-      #check formatting
-      # First remove all digits so wrong answers don't give bad formatting too.
-      correctNoNums = re.sub(pattern, '', correct)
-      outNoNums = re.sub(pattern, '', out)
-      if i != 3:  # i == 3 is the special case for repeating guess ambiguity.
-        if outNoNums != correctNoNums and correct_formatting:
-          print("\tIncorrect Formatting -5")
-          print("\t=====Correct=====\n\t"+'\n\t'.join(correct.split('\n'))+"\n\t=====Output=====\n\t"+'\n\t'.join(out.split('\n')))
-          printed = True
-          # Don't count off for using wrong number of spaces.
-          correct_formatting = outNoNums.replace(' ', '') == correctNoNums.replace(' ', '')
-      else:
-        if outNoNums != correctNoNums and out != alternateWrongGuessOutput and correct_formatting:
-          print("\tIncorrect Formatting -5")
-          print("\t=====Correct=====\n\t"+'\n\t'.join(correct.split('\n'))+"\n\t=====Output=====\n\t"+'\n\t'.join(out.split('\n')))
-          printed = True
-          # There are a lot of potential ways to do this case, so just compare
-          # the strings with all whitespace removed.
-          correct_formatting = \
-              ''.join(outNoNums.split()) == ''.join(correctNoNums.split()) or \
-              ''.join(out.split()) == ''.join(alternateWrongGuessOutput.split())
+      # check correctness
+      failed = False
+      # Get numbers following the intro to the game.
+      theirNums = [int(s) for s in out[out.find('Are you ready')+1:].split() if s.isdigit()]
+      ourNums = [int(s) for s in correct[correct.find('Are you ready')+1:].split() if s.isdigit()]
 
-      #check correctness
-      #if there's a perfect match no need to fuzzy match
-      if not correct_formatting or (i != 3 and out != correct):
-        failed = False
-        # Get numbers following the intro to the game.
-        theirNums = [int(s) for s in out[out.find('Are you ready')+1:].split() if s.isdigit()]
-        ourNums = [int(s) for s in correct[correct.find('Are you ready')+1:].split() if s.isdigit()]
-
-        if i == 2:
-          if "bye" not in out.lower(): 
-            failed = True
-        elif i == 4:
-          if badResponse.lower()[:-1] not in out.lower(): 
-            failed = True
-        elif theirNums != ourNums:
+      if i == 2:
+        if "bye" not in out.lower(): 
           failed = True
+      elif i == 3:
+        if out.count("Enter 1 if my guess was high, -1 if low, and 0 if correct:") != 3:
+          failed = True
+      elif i == 4:
+        if badResponse.lower()[:-1] not in out.lower(): 
+          failed = True
+      elif theirNums != ourNums:
+        failed = True
 
-        if failed:
-          comments.append("Failed test " + str(i+1) + ": " +
-                          testDescription[i] + " (-5)")
-          numFailed += 1
-          if not printed:
-            print("\tFailed test "+str(i+1) + ": -5")
-            print("\t=====Correct=====\n\t"+'\n\t'.join(correct.split('\n'))+"\n\t=====Output=====\n\t"+'\n\t'.join(out.split('\n')))
-        else:
-          print("\tPassed")
+      if failed:
+        comments.append("Failed test " + str(i+1) + ": " +
+                        testDescription[i] + " (-5)")
+        numFailed += 1
+        print("\tFailed test "+str(i+1) + ": -5")
+        print("\t=====Correct=====\n\t"+'\n\t'.join(correct.split('\n'))+"\n\t=====Output=====\n\t"+'\n\t'.join(out.split('\n')))
       else:
         print("\tPassed")
 
@@ -220,7 +214,7 @@ def assign14(csid , writeToFile) :
 
     if not correct_formatting:
       total_off -= 5
-      feedback = "Incorrect formatting: -5"
+      feedback = "Incorrect formatting: " + formatting_mistake + " (-5)"
       comments.append(feedback)
       print(feedback)
     grade += total_off

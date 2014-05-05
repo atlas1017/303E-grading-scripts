@@ -111,6 +111,13 @@ def assign14(csid , writeToFile) :
     'y\nBAD INPUT\nBAD INPUT\n0\n',
     'y\n1\n-1\n1\n-1\n1\n-1\n1'
   ]
+  testDescription = [
+    'Thinking of 1',
+    'Thinking of 33',
+    "User doesn't want to play",
+    'Entering something other than 1, -1, or 0',
+    'More than 7 guesses should fail'
+  ]
   correctOutput = [
     initialPrompt + '\nGuess  1 :  The number you thought was 50\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  2 :  The number you thought was 25\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  3 :  The number you thought was 12\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  4 :  The number you thought was 6\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  5 :  The number you thought was 3\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  6 :  The number you thought was 1\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \n'+ goodResponse,
     initialPrompt + '\nGuess  1 :  The number you thought was 50\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  2 :  The number you thought was 25\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  3 :  The number you thought was 37\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  4 :  The number you thought was 31\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  5 :  The number you thought was 34\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  6 :  The number you thought was 32\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  7 :  The number you thought was 33\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \n'+goodResponse,
@@ -132,26 +139,22 @@ def assign14(csid , writeToFile) :
                                goodResponse)
   if late != -1:
     answers = []
-    count = 0
-    for test in testCases:
-      count += 1
+    for i, test in enumerate(testCases):
       try:
         process = subprocess.Popen(['python3', fileToGrade], **pipes)
         out = process.communicate(bytes(test, 'UTF-8'))[0]
         answers.append(str(out)[2:-1].replace('\\n','\n').strip())
       except KeyboardInterrupt:
-        print(" on test" +str(count))
+        print(" on test" +str(i+1))
 
     correct_formatting = True
 
     # gradin' normal tests 
     correct = ""
-    count = 0
     numFailed = 0
     for i,(correct,out) in enumerate(zip(correctOutput,answers)):
       printed = False
-      count += 1
-      print("=====Test "+str(count)+"=====")
+      print("=====Test "+str(i+1)+"=====")
       #check formatting
       if i != 3:  # i == 3 is the special case for repeating guess ambiguity.
         if out != correct and correct_formatting:
@@ -173,20 +176,21 @@ def assign14(csid , writeToFile) :
         theirNums = [int(s) for s in out.split() if s.isdigit()]
         ourNums = [int(s) for s in correct.split() if s.isdigit()]
 
-        if count == 3:
+        if i == 2:
           if "bye" not in out.lower(): 
             failed = True
-        elif count == 5:
+        elif i == 4:
           if badResponse.lower()[:-1] not in out.lower(): 
             failed = True
         elif set(theirNums) != set(ourNums):
           failed = True
 
         if failed:
-          comments.append("Failed test " + str(count) + " (-5)")
+          comments.append("Failed test " + str(i+1) + ": " +testDescription[i] +
+                          " (-5)")
           numFailed += 1
           if not printed:
-            print("\tFailed test "+str(count) + ": -5")
+            print("\tFailed test "+str(i+1) + ": -5")
             print("\t=====Correct=====\n\t"+'\n\t'.join(correct.split('\n'))+"\n\t=====Output=====\n\t"+'\n\t'.join(out.split('\n')))
         else:
           print("\tPassed")

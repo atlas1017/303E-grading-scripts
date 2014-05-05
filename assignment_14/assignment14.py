@@ -13,7 +13,7 @@ pipes = {'stdout':subprocess.PIPE, 'stdin':subprocess.PIPE, 'stderr':subprocess.
 outputFilename = 'assignment14.txt'
 outputFile = open(outputFilename, 'a')
 filename = "GuessingGame.py"
-dateString = "11-20-2013 23:59:59"
+dateString = "05-02-2014 23:59:59"
 
 def main():
   out = subprocess.getoutput('ls ./')
@@ -44,7 +44,6 @@ def main():
     print('======================')
     assign14( csid , False)
   outputFile.close()
-  inputFile.close()
 
 def assign14(csid , writeToFile) :
   fileToGrade = ""
@@ -119,6 +118,18 @@ def assign14(csid , writeToFile) :
     initialPrompt + '\nGuess  1 :  The number you thought was 50\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nEnter 1 if my guess was high, -1 if low, and 0 if correct: \n' + goodResponse,
     initialPrompt + '\nGuess  1 :  The number you thought was 50\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  2 :  The number you thought was 25\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  3 :  The number you thought was 37\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  4 :  The number you thought was 31\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  5 :  The number you thought was 34\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  6 :  The number you thought was 32\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \nGuess  7 :  The number you thought was 33\nEnter 1 if my guess was high, -1 if low, and 0 if correct: \n'+badResponse
   ]
+  # Due to the ambiguity in the directions stating to "repeat the guess" when
+  # an input other than 1, 0, or -1 is entered, some students repeated the whole
+  # guess including "Guess x : The number you thought was y" and not just the
+  # prompt for a new input.
+  alternateWrongGuessOutput = (initialPrompt + '\n' +
+                               'Guess  1 :  The number you thought was 50\n' +
+                               'Enter 1 if my guess was high, -1 if low, and 0 if correct: \n' +
+                               'Guess  1 :  The number you thought was 50\n' +
+                               'Enter 1 if my guess was high, -1 if low, and 0 if correct: \n' +
+                               'Guess  1 :  The number you thought was 50\n' +
+                               'Enter 1 if my guess was high, -1 if low, and 0 if correct: \n' +
+                               goodResponse)
   if late != -1:
     answers = []
     count = 0
@@ -137,16 +148,23 @@ def assign14(csid , writeToFile) :
     correct = ""
     count = 0
     numFailed = 0
-    for correct,out in zip(correctOutput,answers):
+    for i,(correct,out) in enumerate(zip(correctOutput,answers)):
       printed = False
       count += 1
       print("=====Test "+str(count)+"=====")
       #check formatting
-      if out != correct and correct_formatting:
-        print("\tIncorrect Formatting -5")
-        print("\t=====Correct=====\n\t"+'\n\t'.join(correct.split('\n'))+"\n\t=====Output=====\n\t"+'\n\t'.join(out.split('\n')))
-        printed = True
-        correct_formatting = False
+      if i != 3:  # i == 3 is the special case for repeating guess ambiguity.
+        if out != correct and correct_formatting:
+          print("\tIncorrect Formatting -5")
+          print("\t=====Correct=====\n\t"+'\n\t'.join(correct.split('\n'))+"\n\t=====Output=====\n\t"+'\n\t'.join(out.split('\n')))
+          printed = True
+          correct_formatting = False
+      else:
+        if out != correct and out != alternateWrongGuessOutput and correct_formatting:
+          print("\tIncorrect Formatting -5")
+          print("\t=====Correct=====\n\t"+'\n\t'.join(correct.split('\n'))+"\n\t=====Output=====\n\t"+'\n\t'.join(out.split('\n')))
+          printed = True
+          correct_formatting = False
 
       #check correctness
       #if there's a perfect match no need to fuzzy match
@@ -245,7 +263,7 @@ def isLate( splitted ):
   lateOne = dueDate + timedelta(days=1) 
   lateTwo = lateOne + timedelta(days=1)
   lateSev = dueDate + timedelta(days=7)
-  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2013", "%b %d %H:%M %Y")
+  turninDate = datetime.strptime(splitted[5] + " " +( ("0" + splitted[6]) if len(splitted[6]) == 1 else splitted[6])+ " " + splitted[7] +" 2014", "%b %d %H:%M %Y")
   if turninDate <= dueDate :
     return 0
   elif turninDate <= lateOne :
